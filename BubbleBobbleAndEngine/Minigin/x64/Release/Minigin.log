@@ -1,0 +1,34 @@
+﻿  MiniginPCH.cpp
+  BaseComponent.cpp
+  Font.cpp
+  FPS.cpp
+  InputManager.cpp
+  Main.cpp
+  Minigin.cpp
+  Renderer.cpp
+  ResourceManager.cpp
+  Scene.cpp
+  SceneManager.cpp
+  TextComponent.cpp
+  Texture2D.cpp
+  TextureRendererComponent.cpp
+  Time.cpp
+  Transform.cpp
+     Creating library D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.lib and object D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.exp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 654 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Minigin.vcxproj -> D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.exe
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2\lib\x64\SDL2.dll
+  1 File(s) copied
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x64\libjpeg-9.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x64\libpng16-16.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x64\libtiff-5.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x64\libwebp-7.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x64\SDL2_image.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x64\zlib1.dll
+  6 File(s) copied
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_ttf\lib\x64\libfreetype-6.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_ttf\lib\x64\SDL2_ttf.dll
+  2 File(s) copied

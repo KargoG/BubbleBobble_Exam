@@ -7,17 +7,17 @@
 
 void FPS::Start()
 {
-	if (!m_pGameObject.expired())
+	if (m_pGameObject)
 	{
-		m_pText = m_pGameObject.lock()->GetComponent<TextComponent>();
+		m_pText = m_pGameObject->GetComponent<TextComponent>();
 	}
 }
 
 void FPS::Update()
 {
-	if(!m_pText.expired())
+	if(m_pText)
 	{
-		m_pText.lock()->SetText( std::to_string(int(Time::GetInstance().GetFPS())) + " FPS" );
+		m_pText->SetText( std::to_string(int(Time::GetInstance().GetFPS())) + " FPS" );
 	}
 }
 

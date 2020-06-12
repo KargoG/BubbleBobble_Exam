@@ -13,6 +13,6 @@ public:
 	virtual void Render() const override;
 	
 private:
-	std::weak_ptr<TextComponent> m_pText;
+	TextComponent* m_pText;
 };
 

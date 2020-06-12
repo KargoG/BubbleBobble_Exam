@@ -14,55 +14,13 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{2dd1121b-c66d-4c14-ab0b-e1b0170b474d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Singletons">
-      <UniqueIdentifier>{d88b8508-22fb-4416-9ad7-9f8296c421a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{e44d7a8c-3008-4ecd-b408-528d967944b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ResourcesTypes">
-      <UniqueIdentifier>{a4c9725a-8afb-4bde-aaff-edc6a04fbaaf}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureRendererComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>ResourcesTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>ResourcesTypes</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>ResourcesTypes</Filter>
     </ClInclude>
     <ClInclude Include="Minigin.h">
       <Filter>Core</Filter>
@@ -70,47 +28,17 @@
     <ClInclude Include="MiniginPCH.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="TextComponent.h">
+    <ClInclude Include="LevelLoader.h" />
+    <ClInclude Include="Wall.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="FPS.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="FPS.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>ResourcesTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture2D.cpp">
-      <Filter>ResourcesTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureRendererComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>ResourcesTypes</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Core</Filter>
@@ -121,9 +49,12 @@
     <ClCompile Include="MiniginPCH.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="TextComponent.cpp">
+    <ClCompile Include="LevelLoader.cpp" />
+    <ClCompile Include="Wall.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="FPS.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="FPS.cpp" />
   </ItemGroup>
 </Project>

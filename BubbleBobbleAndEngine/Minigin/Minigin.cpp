@@ -7,13 +7,14 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <SDL.h>
-#include "TextObject.h"
-#include "GameObject.h"
-#include "Scene.h"
 #include "Time.h"
+#include "LevelLoader.h"
+#include "GameObject.h"
 #include "TextureRendererComponent.h"
+#include "TransformComponent.h"
 #include "TextComponent.h"
 #include "FPS.h"
+#include "Scene.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -46,35 +47,38 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
+	//auto scene = SceneManager::GetInstance().CreateScene("Demo");
 
-	auto go{ std::make_shared<GameObject>() };
-	go->AddComponent(std::make_shared <TextureRendererComponent>());
-	go->GetComponent<TextureRendererComponent>()->SetTexture("background.jpg");
-	scene.Add(go);
+	//auto go{ new GameObject() };
+	//go->AddComponent(new TextureRendererComponent());
+	//go->GetComponent<TextureRendererComponent>()->SetTexture("background.jpg");
+	//scene->Add(go);
 
-	go = std::make_shared<GameObject>();
-	go->AddComponent(std::make_shared <Transform>(216.f, 180.f));
-	go->AddComponent(std::make_shared <TextureRendererComponent>());
-	go->GetComponent<TextureRendererComponent>()->SetTexture("logo.png");
-	scene.Add(go);
+	//go = new GameObject();
+	//go->AddComponent(new TransformComponent(216.f, 180.f));
+	//go->AddComponent(new TextureRendererComponent());
+	//go->GetComponent<TextureRendererComponent>()->SetTexture("logo.png");
+	//scene->Add(go);
 
 
-	go = std::make_shared<GameObject>();
-	go->AddComponent(std::make_shared <Transform>(80.f, 20.f));
+	//go = new GameObject();
+	//go->AddComponent(new TransformComponent(80.f, 20.f));
+	//
+	//auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	//auto tc = new TextComponent(font, "Programming 4 Assignment");
+	//go->AddComponent(tc);
+	//scene->Add(go);
+
+	//go = new GameObject();
+	//go->AddComponent(new TransformComponent(0.f, 0.f));
+	//font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
+	//tc = new TextComponent(font, "00 FPS");
+	//go->AddComponent(tc);
+	//go->AddComponent(new FPS());
+	//scene->Add(go);
 	
-	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto tc = std::make_shared<TextComponent>(font, "Programming 4 Assignment");
-	go->AddComponent(tc);
-	scene.Add(go);
-
-	go = std::make_shared<GameObject>();
-	go->AddComponent(std::make_shared <Transform>(0.f, 0.f));
-	font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
-	tc = std::make_shared<TextComponent>(font, "00 FPS");
-	go->AddComponent(tc);
-	go->AddComponent(std::make_shared<FPS>());
-	scene.Add(go);
+	LevelLoader loader{};
+	loader.LoadLevel("Level01.txt");
 }
 
 void Minigin::Cleanup()
