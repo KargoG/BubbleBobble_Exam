@@ -69,6 +69,15 @@
     <ClInclude Include="RigidbodyComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="GameData.h">
+      <Filter>Core\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="InputComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -112,6 +121,15 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="RigidbodyComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameData.cpp">
+      <Filter>Core\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InputComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>

@@ -26,11 +26,16 @@ public:
 	void PhysicsUpdate() override;
 	void Render() const override;
 
-	void AddCollider(BoxColliderComponent* pBoxCollider) { m_BoxColliders.push_back(pBoxCollider); };
+	void AddCollider(BoxColliderComponent* pBoxCollider) { m_BoxColliders.push_back(pBoxCollider); }
+	virtual BaseComponent * Clone() const override;
+	void LoadFromJson(const nlohmann::json& json) override { UNREFERENCED_PARAMETER(json); }
+	void AddVelocity(float x, float y) { m_Velocity += glm::vec2{ x, y }; };
+	
 private:
 	std::vector<BoxColliderComponent*> m_BoxColliders{};
 	glm::vec2 m_Velocity{0, 0};
 
 	TouchFlags m_TouchFlags{ TouchFlags::None };
+
 };
 

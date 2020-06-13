@@ -7,6 +7,9 @@
 #include "Renderer.h"
 #include "Texture2D.h"
 #include "Font.h"
+#include "GameObject.h"
+#include <json.hpp>
+#include <fstream>
 
 void ResourceManager::Init(const std::string& dataPath)
 {
@@ -44,4 +47,40 @@ Texture2D* ResourceManager::LoadTexture(const std::string& file) const
 Font* ResourceManager::LoadFont(const std::string& file, unsigned int size) const
 {
 	return new Font(m_DataPath + file, size);
+}
+
+GameObject* ResourceManager::SpawnPrototype(const std::string& prototypeName)
+{
+	auto it{ m_Prototypes.find(prototypeName) };
+	if (it == m_Prototypes.end())
+	{
+		std::string filepath{ m_DataPath + "Prototypes/" + prototypeName + ".json" };
+		std::ifstream jsonInputStream{ filepath.c_str() };
+
+		if (!jsonInputStream)
+			throw std::exception(std::string{ "Couldn't open " + filepath + "!\n" }.c_str());
+		
+		nlohmann::json j{};
+		jsonInputStream >> j;
+		
+		GameObject *newPrototype{ GameObject::CreateFromJson(j) };
+
+		std::pair<std::string, GameObject*> newPair{ prototypeName, newPrototype };
+
+		
+		m_Prototypes.insert(newPair);
+
+		return newPrototype->Clone();
+	}
+
+	return it->second->Clone();
+}
+
+void ResourceManager::CleanUp()
+{
+	for( std::pair<const std::string, GameObject *> &prototype : m_Prototypes )
+	{
+		delete prototype.second;
+	}
+	m_Prototypes.clear();
 }

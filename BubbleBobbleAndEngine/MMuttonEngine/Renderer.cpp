@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "GameData.h"
 #pragma warning(push)
 #pragma warning (disable:4201)
 #include <glm/vec2.hpp>
@@ -70,6 +71,8 @@ void Renderer::RenderTexture( const Texture2D &texture, glm::vec2 dstPos, glm::v
 	src.y = static_cast<int>(srcPos.y);
 	src.w = static_cast<int>(srcDimensions.x);
 	src.h = static_cast<int>(srcDimensions.y);
+
+	MirrorRect(dst);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
 }
 
@@ -81,16 +84,33 @@ void Renderer::RenderRect( glm::vec2 pos, glm::vec2 dimensions ) const
 	rect.y = static_cast<int>(pos.y);
 	rect.w = static_cast<int>(dimensions.x);
 	rect.h = static_cast<int>(dimensions.y);
-	
+
+	MirrorRect(rect);
 	SDL_RenderDrawRect(m_Renderer, &rect);
 }
 
 void Renderer::RenderLine( glm::vec2 startPos, glm::vec2 endPos ) const
 {
+	MirrorPoint(startPos.y);
+	MirrorPoint(endPos.y);
 	SDL_RenderDrawLine(m_Renderer, static_cast<int>(startPos.x), static_cast<int>(startPos.y), static_cast<int>(endPos.x), static_cast<int>(endPos.y));
 }
 
 void Renderer::SetRenderColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) const
 {
 	SDL_SetRenderDrawColor(m_Renderer, r, g, b, a);
+}
+
+void Renderer::MirrorRect( SDL_Rect &rect )
+{
+	int height = GameData::GetInstance().GetWindowHeight();
+
+	rect.y = height - rect.y - rect.h;
+}
+
+void Renderer::MirrorPoint( float &yPos )
+{
+	int height = GameData::GetInstance().GetWindowHeight();
+
+	yPos = height - yPos;
 }

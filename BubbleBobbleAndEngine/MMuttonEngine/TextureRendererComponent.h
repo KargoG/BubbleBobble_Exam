@@ -6,7 +6,7 @@ class TextureRendererComponent :
 	public BaseComponent
 {
 public:
-	~TextureRendererComponent();
+	virtual ~TextureRendererComponent();
 	
 	virtual void Start() override;
 	virtual void Update() override;
@@ -19,9 +19,14 @@ public:
 	void SetSrcX(float x) const { m_pTexture->SetX( x ); };
 	void SetSrcY(float y) const { m_pTexture->SetY( y ); };
 	void SetSrcWidth(float width) const { m_pTexture->SetWidth( width ); };
-	void SetSrcHeight(float height) const { m_pTexture->SetHeight( height ); };
+	void SetSrcHeight(float height) const { m_pTexture->SetHeight( height ); }
+	
+	BaseComponent * Clone() const override;
+	void LoadFromJson(const nlohmann::json& json) override;
+	
 private:
 
+	std::string m_TextureName{};
 	Texture2D *m_pTexture{ nullptr };
 };
 

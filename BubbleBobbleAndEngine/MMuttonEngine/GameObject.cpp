@@ -4,6 +4,14 @@
 #include "Renderer.h"
 #include "BaseComponent.h"
 #include "TransformComponent.h"
+#include "Scene.h"
+#include <typeinfo>
+
+GameObject::GameObject()
+{
+	AddComponent(new TransformComponent{0, 0, 0});
+}
+
 
 GameObject::~GameObject()
 {
@@ -18,6 +26,19 @@ void GameObject::AddComponent(BaseComponent* pComponent)
 {
 	m_pComponents.push_back(pComponent);
 	pComponent->SetGameObject(this);
+}
+
+GameObject * GameObject::CreateFromJson( const nlohmann::json &json )
+{
+	UNREFERENCED_PARAMETER(json);
+	GameObject *newGameObject{ new GameObject{} };
+	
+	for( auto it = json.items().begin(); it != json.items().end(); ++it )
+	{
+		newGameObject->AddComponent(BaseComponent::CreateFromJson(it.key(), it.value()));
+	}
+	
+	return newGameObject;
 }
 
 void GameObject::Start()
@@ -50,7 +71,17 @@ void GameObject::Render() const
 	}
 }
 
-GameObject::GameObject()
+GameObject* GameObject::Clone() const
 {
-	AddComponent(new TransformComponent{});
+	GameObject* clone{ new GameObject{} };
+
+	for( BaseComponent * const pComponent : m_pComponents )
+	{
+		clone->AddComponent( pComponent->Clone() );
+	}
+
+	if (m_pScene)
+		m_pScene->Add(clone);
+	
+	return clone;
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <json.hpp>
 
 class Scene;
 class BaseComponent;
@@ -10,6 +11,7 @@ public:
 	virtual void Update();
 	virtual void PhysicsUpdate();
 	virtual void Render() const;
+	virtual GameObject* Clone() const;
 
 	GameObject();
 	virtual ~GameObject();
@@ -24,7 +26,8 @@ public:
 	void AddComponent(BaseComponent * pComponent);
 	void SetScene(Scene* pScene) { m_pScene = pScene; };
 	Scene* GetScene() const { return m_pScene; };
-	
+
+	static GameObject* CreateFromJson(const nlohmann::json& json);
 private:
 	std::vector<BaseComponent*> m_pComponents{};
 	Scene* m_pScene;

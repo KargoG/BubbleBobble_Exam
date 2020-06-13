@@ -7,7 +7,8 @@
 
 TextureRendererComponent::~TextureRendererComponent()
 {
-	delete m_pTexture;
+	if(m_pTexture)
+		delete m_pTexture;
 }
 
 void TextureRendererComponent::Start()
@@ -42,7 +43,12 @@ void TextureRendererComponent::Render() const
 
 void TextureRendererComponent::SetTexture( const char * filename)
 {
-	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_TextureName = filename;
+	
+	if(m_pTexture)
+		delete m_pTexture; // TODO Remove when Resource manager takes ownership of textures
+	
+	m_pTexture = ResourceManager::GetInstance().LoadTexture(m_TextureName);
 }
 
 void TextureRendererComponent::SetRenderDimensions( float xPos, float yPos, float width, float height ) const
@@ -51,4 +57,32 @@ void TextureRendererComponent::SetRenderDimensions( float xPos, float yPos, floa
 	SetSrcY(yPos);
 	SetSrcWidth(width);
 	SetSrcHeight(height);
+}
+
+BaseComponent * TextureRendererComponent::Clone() const
+{
+	TextureRendererComponent* tc{ new TextureRendererComponent{} };
+	if (m_TextureName.empty())
+	{
+		tc->m_pTexture = nullptr;
+	}
+	else
+	{
+		tc->m_pTexture = ResourceManager::GetInstance().LoadTexture(m_TextureName);
+		tc->SetRenderDimensions(m_pTexture->GetPosition().x, m_pTexture->GetPosition().y, m_pTexture->GetDimension().x, m_pTexture->GetDimension().y);
+	}
+
+	return tc;
+}
+
+void TextureRendererComponent::LoadFromJson( const nlohmann::json &json )
+{
+	SetTexture(json.at("Texture").get<std::string>().c_str());
+
+	float x = json.at("X").get<float>();
+	float y = json.at("Y").get<float>();
+	float width = json.at("Width").get<float>();
+	float height = json.at("Height").get<float>();
+	
+	SetRenderDimensions(x, y, width, height);
 }

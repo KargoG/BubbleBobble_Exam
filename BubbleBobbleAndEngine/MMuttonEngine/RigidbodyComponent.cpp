@@ -4,7 +4,7 @@
 #include "BoxColliderComponent.h"
 #include "Scene.h"
 #include "TransformComponent.h"
-#include "Time.h"	
+#include "Time.h"
 #if _DEBUG
 #include "Renderer.h"
 #endif
@@ -22,13 +22,14 @@ void RigidbodyComponent::Update()
 
 void RigidbodyComponent::PhysicsUpdate()
 {
+	m_TouchFlags = TouchFlags::None;
 	TransformComponent* pPlayerTransform{ m_pGameObject->GetComponent<TransformComponent>() };
 	const glm::vec2& playerPosition{ pPlayerTransform->GetPosition() };
 	
 	
 	const std::vector<BoxColliderComponent*>& levelCollider{ m_pGameObject->GetScene()->GetCollider() };
 
-	bool hasCollided{ false };
+	glm::vec2 adjustedPosition{-1, -1};
 	
 	for( BoxColliderComponent * pPlayerCollider : m_BoxColliders)
 	{
@@ -36,51 +37,60 @@ void RigidbodyComponent::PhysicsUpdate()
 
 		for( BoxColliderComponent * const pCollider : levelCollider)
 		{
+			int newFlags{ int(pPlayerCollider->CalculateCollisions(pCollider)) };
+			m_TouchFlags = TouchFlags(int(m_TouchFlags) | newFlags);
+
+
+			if (newFlags == int(TouchFlags::None))
+				continue;
+
 			glm::vec2 colliderDimensions{ pCollider->GetDimensions() };
 			const glm::vec2& colliderPosition{ pCollider->GetGameObject()->GetComponent<TransformComponent>()->GetPosition() };
-
-			bool collisionXAxis{ playerPosition.x < colliderPosition.x + colliderDimensions.x &&
-								playerPosition.x + playerDimensions.x > colliderPosition.x };
-			bool collisionYAxis{ playerPosition.y < colliderPosition.y + colliderDimensions.y &&
-								playerPosition.y + playerDimensions.y > colliderPosition.y };
-
-
-			if(collisionXAxis && collisionYAxis)
+			
+			if(newFlags & int(TouchFlags::Left))
 			{
-				std::cout << "Colliding\n";
-				m_Velocity.x = 0;
-				m_Velocity.y = 0;
-
-				hasCollided = true;
-
-				if(playerPosition.x < colliderPosition.x + colliderDimensions.x && playerPosition.x > colliderPosition.x)
-				{
-					m_TouchFlags = TouchFlags(int(m_TouchFlags) | int(TouchFlags::Left));
-				}
-				if(playerPosition.x + playerDimensions.x > colliderPosition.x && playerPosition.x + playerDimensions.x < colliderPosition.x + colliderDimensions.x)
-				{
-					m_TouchFlags = TouchFlags(int(m_TouchFlags) | int(TouchFlags::Right));
-				}
-				if(playerPosition.y < colliderPosition.y + colliderDimensions.y && playerPosition.y > colliderPosition.y)
-				{
-					m_TouchFlags = TouchFlags(int(m_TouchFlags) | int(TouchFlags::Bottom));
-				}
-				if(playerPosition.y + playerDimensions.y > colliderPosition.y && playerPosition.y + playerDimensions.y < colliderPosition.y + colliderDimensions.y)
-				{
-					m_TouchFlags = TouchFlags(int(m_TouchFlags) | int(TouchFlags::Top));
-				}
-				
+				adjustedPosition.x = colliderPosition.x + colliderDimensions.x;
 			}
+			if(newFlags & int(TouchFlags::Right))
+			{
+				adjustedPosition.x = colliderPosition.x - playerDimensions.x;
+			}
+			if(newFlags & int(TouchFlags::Bottom))
+			{
+				adjustedPosition.y = colliderPosition.y + colliderDimensions.y;
+			}
+			if(newFlags & int(TouchFlags::Top))
+			{
+				adjustedPosition.y = colliderPosition.y - playerDimensions.y;
+			}
+			
 		}
 	}
 
-	if(!hasCollided)
-	{
-		float dt{ Time::GetInstance().GetPhysicsDeltaTime() };
-		m_Velocity.y += -9.81f * dt;
+	float dt{ Time::GetInstance().GetPhysicsDeltaTime() };
 
-		pPlayerTransform->SetPosition(glm::vec3{ playerPosition + glm::vec2{ m_Velocity.x * dt, m_Velocity.y * dt } , 0 });
-	}
+
+	if(int(m_TouchFlags) & int(TouchFlags::Left))
+		m_Velocity.x = max(0, m_Velocity.x);
+	
+	if(int(m_TouchFlags) & int(TouchFlags::Right))
+		m_Velocity.x = min(0, m_Velocity.x);
+
+	if(int(m_TouchFlags) & int(TouchFlags::Bottom))
+		m_Velocity.y = max(0, m_Velocity.y);
+
+	if(int(m_TouchFlags) & int(TouchFlags::Top))
+		m_Velocity.y = min(0, m_Velocity.y);
+
+	
+	
+	if((int(m_TouchFlags) & int(TouchFlags::Bottom)) == 0)
+		m_Velocity.y += -98.1f * dt;
+
+	float newXPos{ playerPosition.x + m_Velocity.x * dt };
+	float newYPos{ playerPosition.y + m_Velocity.y * dt };
+	
+	pPlayerTransform->SetPosition( (adjustedPosition.x > 0) ? adjustedPosition.x : newXPos, (adjustedPosition.y > 0) ? adjustedPosition.y : newYPos);
 }
 
 void RigidbodyComponent::Render() const
@@ -119,4 +129,11 @@ void RigidbodyComponent::Render() const
 		}
 	}
 #endif
+}
+
+BaseComponent * RigidbodyComponent::Clone() const
+{
+	RigidbodyComponent* rb{ new RigidbodyComponent{} };
+	rb->m_Velocity = m_Velocity;
+	return rb;
 }
