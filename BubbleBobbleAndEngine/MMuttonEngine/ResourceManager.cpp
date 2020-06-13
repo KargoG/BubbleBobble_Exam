@@ -33,20 +33,43 @@ void ResourceManager::Init(const std::string& dataPath)
 	}
 }
 
-Texture2D* ResourceManager::LoadTexture(const std::string& file) const
+Texture2D* ResourceManager::LoadTexture(const std::string& file)
 {
-	const auto fullPath = m_DataPath + file;
-	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
-	if (texture == nullptr) 
+	auto it{ m_Textures.find(file) };
+	
+	if (it == m_Textures.end())
 	{
-		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+		const auto fullPath = m_DataPath + file;
+		auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
+		if (texture == nullptr)
+		{
+			throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+		}
+
+		std::pair<std::string, SDL_Texture*> newPair{ file, texture };
+		m_Textures.insert(newPair);
+		
+		return new Texture2D(texture);
 	}
-	return new Texture2D(texture);
+
+	return new Texture2D(it->second);
 }
 
-Font* ResourceManager::LoadFont(const std::string& file, unsigned int size) const
+Font* ResourceManager::LoadFont(const std::string& file, unsigned int size)
 {
-	return new Font(m_DataPath + file, size);
+	auto it{ m_Fonts.find(file + std::to_string(size)) };
+
+	if (it == m_Fonts.end())
+	{
+		Font* newFont{ new Font(m_DataPath + file, size) };
+
+		std::pair<std::string, Font*> newPair{ file + std::to_string(size), newFont };
+		m_Fonts.insert(newPair);
+		
+		return newFont;
+	}
+	
+	return it->second;
 }
 
 GameObject* ResourceManager::SpawnPrototype(const std::string& prototypeName)

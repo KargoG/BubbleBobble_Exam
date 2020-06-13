@@ -20,6 +20,9 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{4c3289a4-d82a-4214-8fae-973047128069}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{94420475-cbe2-4d80-be64-a6d996309c3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="ControllerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="BinaryReader.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -131,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="InputComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryReader.cpp">
+      <Filter>Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

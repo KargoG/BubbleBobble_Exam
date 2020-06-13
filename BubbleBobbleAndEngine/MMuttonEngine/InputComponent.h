@@ -10,10 +10,6 @@
 #pragma warning(pop)
 
 class ControllerComponent;
-void Jump();
-void FireGun();
-void SwapWeapon();
-void Crouch();
 
 enum class ControllerButton
 {

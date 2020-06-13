@@ -28,7 +28,7 @@ public:
 	void RemoveCollider(BoxColliderComponent* colliderToRemove);
 
 	const std::vector <BoxColliderComponent*>& GetCollider() const { return m_Collider; };
-
+	
 private: 
 	explicit Scene(const std::string& name);
 
@@ -36,5 +36,7 @@ private:
 	std::vector <GameObject*> m_Objects{};
 	std::vector <BoxColliderComponent*> m_Collider{};
 
-	static unsigned int m_IdCounter; 
+	static unsigned int m_IdCounter;
+	
+	bool m_IsInitialized{ false };
 };

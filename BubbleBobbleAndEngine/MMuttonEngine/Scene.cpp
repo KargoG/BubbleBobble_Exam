@@ -40,10 +40,15 @@ void Scene::Start()
 	{
 		pGameObject->Start();
 	}
+
+	m_IsInitialized = true;
 }
 
 void Scene::Update()
 {
+	if (!m_IsInitialized)
+		Start();
+	
 	for(auto& object : m_Objects)
 	{
 		object->Update();

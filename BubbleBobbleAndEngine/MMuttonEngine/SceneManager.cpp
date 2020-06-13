@@ -12,26 +12,17 @@ void SceneManager::Start()
 
 void SceneManager::Update()
 {
-	for(auto& scene : m_Scenes)
-	{
-		scene->Update();
-	}
+	m_pActiveScene->Update();
 }
 
 void SceneManager::PhysicsUpdate()
 {
-	for (auto& scene : m_Scenes)
-	{
-		scene->PhysicsUpdate();
-	}
+	m_pActiveScene->PhysicsUpdate();
 }
 
-void SceneManager::Render()
+void SceneManager::Render() const
 {
-	for (const auto& scene : m_Scenes)
-	{
-		scene->Render();
-	}
+	m_pActiveScene->Render();
 }
 
 SceneManager::~SceneManager()
@@ -47,6 +38,10 @@ Scene* SceneManager::CreateScene(const std::string& name)
 {
 	Scene* newScene = new Scene(name);
 	m_Scenes.push_back(newScene);
+
+	if (!m_pActiveScene)
+		m_pActiveScene = newScene;
+	
 	return newScene;
 }
 
