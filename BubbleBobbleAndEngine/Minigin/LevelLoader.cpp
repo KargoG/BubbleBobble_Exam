@@ -12,57 +12,59 @@
 #include "TransformComponent.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include <BinaryReader.h>
 
-void LevelLoader::LoadLevel( std::string levelName )
+void LevelLoader::Init()
 {
-	std::string fileLocation{ "../Data/Level/" + levelName };
-	Scene *level = SceneManager::GetInstance().CreateScene(levelName);
-
-	std::ifstream levelStream(fileLocation.c_str());
-
-	if (!levelStream)
-	{
-		std::cerr << "SVGParser::GetVerticesFromSvgFile(..), failed to load vertices from file " << fileLocation << std::endl;
-		return;
-	}
-
-	glm::vec3 pos{};
+	std::string fileLocation{ "../Data/Level/SeperatedLevelData.dat" };
 	
-	// Read the file
-	std::string levelLine;
-	while (!levelStream.eof())
+	BinaryReader reader{};
+	reader.OpenReader(fileLocation); // TODO Load enemies
+	
+	int levelNumber{0};
+	for( Scene *& level : m_Levels )
 	{
-		std::getline(levelStream, levelLine);
-
-		pos.x = 0;
+		glm::vec3 pos{0, 8 * 24, 0}; // TODO turn literals into variables u bloke
 		
-		for( const char blockType : levelLine )
+		level = SceneManager::GetInstance().CreateScene("Level" + std::to_string(levelNumber));
+		for (int levelLine = 0; levelLine < 25; ++levelLine) // TODO turn 25 into literal (maybe in Game information???)
 		{
-			switch(blockType)
+			pos.x = 0; // reset X at the beginning of a line
+			
+			// Read line
+			char line{};
+			
+			for( int byte = 0; byte < 4; ++byte)
 			{
-			case '0':
-				break;
-			case '1':
-			{
-				GameObject* newBlock{ ResourceManager::GetInstance().SpawnPrototype("BaseWall") };// TODO uncomment when Spawning works
-				//GameObject* newBlock{ new Wall{1} };
-				newBlock->GetComponent<TransformComponent>()->SetPosition(pos);
-				level->Add(newBlock);
-				break;
-			}
-			default: ;
+				reader.ReadVarFromFile(line); // every lines has 4 bytes for 32 bits (bitmask)
+				int mask{ 0b10000000 }; // 0b1000 0000
+				
+				for( int i = 0; i < 8; ++i ) // 8 bit in a byte (nom)
+				{
+					if (line & mask)// if block wanted
+					{
+						GameObject* newBlock{ ResourceManager::GetInstance().SpawnPrototype("BaseWall") };// TODO change Wall type based on level
+
+						newBlock->GetComponent<TransformComponent>()->SetPosition(pos);
+						level->Add(newBlock);
+					}
+					
+					mask >>= 1; // bit shift bitmask
+					pos.x += 8; // TODO remove literal
+				}
 			}
 
-
-			pos.x += 8;
+			pos.y -= 8; // TODO remove literal
 		}
-
-		pos.y += 8;
 		
+		levelNumber++;
 	}
 
-	// close the file
-	levelStream.close();
+	
+	reader.CloseReader();
+}
 
-	level->Add(new Player{});
+void LevelLoader::LoadLevel( int level )
+{
+	SceneManager::GetInstance().SetActiveScene("Level" + std::to_string(level));
 }

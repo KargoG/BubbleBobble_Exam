@@ -1,13 +1,17 @@
 #pragma once
+#include "Singleton.h"
+#include <array>
 
-class LevelLoader
+class Scene;
+
+class LevelLoader : public Singleton<LevelLoader>
 {
 public:
 
-	void LoadLevel(std::string levelName);
+	void Init();
+	void LoadLevel(int level);
 
-	
 private:
-	
+	std::array<Scene*, 100> m_Levels{};
 };
 

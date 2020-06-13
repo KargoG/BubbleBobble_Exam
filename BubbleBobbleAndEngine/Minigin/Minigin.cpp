@@ -2,7 +2,7 @@
 #include "Minigin.h"
 #include <chrono>
 #include <thread>
-#include "InputManager.h"
+#include <InputComponent.h>
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
@@ -52,8 +52,8 @@ void Minigin::LoadGame() const
 	BaseComponent::RegisterComponent("PlayerControllerComponent", new PlayerControllerComponent{});
 
 	// Load Levels
-	LevelLoader loader{};
-	loader.LoadLevel("Level01.txt");
+	LevelLoader::GetInstance().Init();
+	LevelLoader::GetInstance().LoadLevel(25);
 	
 	//auto scene = SceneManager::GetInstance().CreateScene("Demo");
 
