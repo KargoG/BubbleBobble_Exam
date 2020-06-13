@@ -28,3 +28,13 @@ void FPS::PhysicsUpdate()
 void FPS::Render() const
 {
 }
+
+BaseComponent * FPS::Clone() const
+{
+	return new FPS{};
+}
+
+void FPS::LoadFromJson( const nlohmann::json &json )
+{
+	UNREFERENCED_PARAMETER(json);
+}

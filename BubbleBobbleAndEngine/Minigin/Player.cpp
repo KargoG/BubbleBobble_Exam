@@ -4,6 +4,7 @@
 #include "TextureRendererComponent.h"
 #include "TransformComponent.h"
 #include "RigidbodyComponent.h"
+#include "PlayerControllerComponent.h"
 
 Player::Player()
 {
@@ -18,4 +19,9 @@ Player::Player()
 	AddComponent(new RigidbodyComponent{});
 	
 	GetComponent<TransformComponent>()->SetPosition(20, 20);
+
+	AddComponent(new InputComponent{});
+	
+	PlayerControllerComponent* controller = new PlayerControllerComponent{};
+	AddComponent(controller);
 }

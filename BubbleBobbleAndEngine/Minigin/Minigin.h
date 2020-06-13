@@ -8,6 +8,8 @@ public:
 	void LoadGame() const;
 	void Cleanup();
 	void Run();
+
+	bool CloseWindow();
 private:
 	SDL_Window* m_Window{};
 };

@@ -9,12 +9,9 @@
 #include <SDL.h>
 #include "Time.h"
 #include "LevelLoader.h"
-#include "GameObject.h"
-#include "TextureRendererComponent.h"
-#include "TransformComponent.h"
-#include "TextComponent.h"
 #include "FPS.h"
-#include "Scene.h"
+#include "GameData.h"
+#include "PlayerControllerComponent.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -25,13 +22,14 @@ void Minigin::Initialize()
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
+	GameData::GetInstance().Init(640, 480);
 
 	m_Window = SDL_CreateWindow(
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640,
-		480,
+		GameData::GetInstance().GetWindowWidth(),
+		GameData::GetInstance().GetWindowHeight(),
 		SDL_WINDOW_OPENGL
 	);
 	if (m_Window == nullptr) 
@@ -47,6 +45,16 @@ void Minigin::Initialize()
  */
 void Minigin::LoadGame() const
 {
+
+	// Register Components
+	BaseComponent::RegisterEngineComponents();
+	BaseComponent::RegisterComponent("FPS", new FPS{});
+	BaseComponent::RegisterComponent("PlayerControllerComponent", new PlayerControllerComponent{});
+
+	// Load Levels
+	LevelLoader loader{};
+	loader.LoadLevel("Level01.txt");
+	
 	//auto scene = SceneManager::GetInstance().CreateScene("Demo");
 
 	//auto go{ new GameObject() };
@@ -69,21 +77,21 @@ void Minigin::LoadGame() const
 	//go->AddComponent(tc);
 	//scene->Add(go);
 
-	//go = new GameObject();
+	//auto go = new GameObject();
 	//go->AddComponent(new TransformComponent(0.f, 0.f));
-	//font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
-	//tc = new TextComponent(font, "00 FPS");
+	////auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
+	//auto tc = new TextComponent("Lingua.otf", 15, "00 FPS");
 	//go->AddComponent(tc);
 	//go->AddComponent(new FPS());
 	//scene->Add(go);
 	
-	LevelLoader loader{};
-	loader.LoadLevel("Level01.txt");
 }
 
 void Minigin::Cleanup()
 {
 	Renderer::GetInstance().Destroy();
+	ResourceManager::GetInstance().CleanUp();
+	BaseComponent::CleanUp();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
 	SDL_Quit();
@@ -103,7 +111,6 @@ void Minigin::Run()
 	{
 		auto& renderer = Renderer::GetInstance();
 		auto& sceneManager = SceneManager::GetInstance();
-		auto& input = InputManager::GetInstance();
 
 		bool doContinue = true;
 
@@ -125,7 +132,7 @@ void Minigin::Run()
 				accumulatedPhysicsTime -= Time::GetInstance().GetPhysicsDeltaTime();
 			}
 
-			doContinue = input.ProcessInput();
+			doContinue = !Minigin::CloseWindow();
 			
 			sceneManager.Update();
 			renderer.Render();
@@ -135,4 +142,16 @@ void Minigin::Run()
 	}
 
 	Cleanup();
+}
+
+bool Minigin::CloseWindow()
+{
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		if (e.type == SDL_QUIT) {
+			return true;
+		}
+	}
+
+	return false;
 }

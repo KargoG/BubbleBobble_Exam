@@ -19,9 +19,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="InputManager.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="Minigin.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -36,11 +33,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerControllerComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -58,5 +53,6 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerControllerComponent.cpp" />
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@
 #pragma warning(pop)
 #include "TransformComponent.h"
 #include "Player.h"
+#include "ResourceManager.h"
 
 void LevelLoader::LoadLevel( std::string levelName )
 {
@@ -43,7 +44,8 @@ void LevelLoader::LoadLevel( std::string levelName )
 				break;
 			case '1':
 			{
-				GameObject* newBlock{ new Wall{1} };
+				GameObject* newBlock{ ResourceManager::GetInstance().SpawnPrototype("BaseWall") };// TODO uncomment when Spawning works
+				//GameObject* newBlock{ new Wall{1} };
 				newBlock->GetComponent<TransformComponent>()->SetPosition(pos);
 				level->Add(newBlock);
 				break;

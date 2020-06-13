@@ -11,7 +11,9 @@ public:
 	virtual void Update() override;
 	virtual void PhysicsUpdate() override;
 	virtual void Render() const override;
-	
+
+	virtual BaseComponent * Clone() const override;
+	virtual void LoadFromJson( const nlohmann::json &json ) override;
 private:
 	TextComponent* m_pText;
 };
