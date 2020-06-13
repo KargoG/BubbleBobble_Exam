@@ -1,5 +1,6 @@
 #pragma once
 
+class Scene;
 class BaseComponent;
 
 class GameObject
@@ -21,9 +22,12 @@ public:
 	T* GetComponent();
 	
 	void AddComponent(BaseComponent * pComponent);
+	void SetScene(Scene* pScene) { m_pScene = pScene; };
+	Scene* GetScene() const { return m_pScene; };
 	
 private:
 	std::vector<BaseComponent*> m_pComponents{};
+	Scene* m_pScene;
 };
 
 template< typename T >

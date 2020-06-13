@@ -15,9 +15,23 @@ Scene::~Scene()
 	m_Objects.clear();
 }
 
+void Scene::RemoveCollider( BoxColliderComponent *colliderToRemove )
+{
+	auto it = std::find(m_Collider.cbegin(), m_Collider.cend(), colliderToRemove);
+
+	if (it == m_Collider.cend())
+		return;
+
+	m_Collider.erase(it);
+}
+
 void Scene::Add(GameObject* object)
 {
+	if (object->GetScene())
+		throw std::exception{"A GameObject can only be part of 1 Scene!"};
+	
 	m_Objects.push_back(object);
+	object->SetScene(this);
 }
 
 void Scene::Start()

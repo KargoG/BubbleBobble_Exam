@@ -17,6 +17,9 @@ public:
 	BaseComponent(BaseComponent&& other) = delete;
 	BaseComponent& operator=(const BaseComponent& other) = delete;
 	BaseComponent& operator=(BaseComponent&& other) = delete;
+
+	GameObject* GetGameObject() const { return m_pGameObject; }
+	
 protected:
 	GameObject *m_pGameObject;
 
