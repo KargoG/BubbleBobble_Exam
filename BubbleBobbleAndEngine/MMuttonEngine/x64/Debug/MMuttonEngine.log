@@ -1,4 +1,10 @@
-﻿  Renderer.cpp
+﻿  BaseComponent.cpp
+  BoxColliderComponent.cpp
+  GameObject.cpp
+  RigidbodyComponent.cpp
+  Scene.cpp
+  SceneManager.cpp
+  Generating Code...
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 SDL2_ttf.lib(SDL2_ttf.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 xinput.lib(XINPUT1_4.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored

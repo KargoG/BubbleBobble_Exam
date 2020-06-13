@@ -1,0 +1,15 @@
+{
+  "BoxColliderComponent":
+  {
+    "Width": 8,
+    "Height": 8
+  },
+  "TextureRendererComponent":
+  {
+    "Texture": "Textures/LevelBlocks.png",
+    "X": 0,
+    "Y": 0,
+    "Width": 8,
+    "Height": 8
+  }
+}
