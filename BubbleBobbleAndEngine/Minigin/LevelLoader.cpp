@@ -10,6 +10,7 @@
 #include <glm/vec3.hpp>
 #pragma warning(pop)
 #include "TransformComponent.h"
+#include "Player.h"
 
 void LevelLoader::LoadLevel( std::string levelName )
 {
@@ -60,4 +61,6 @@ void LevelLoader::LoadLevel( std::string levelName )
 
 	// close the file
 	levelStream.close();
+
+	level->Add(new Player{});
 }

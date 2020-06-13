@@ -129,7 +129,7 @@ void Minigin::Run()
 			
 			sceneManager.Update();
 			renderer.Render();
-
+			
 			lastTime = currentTime;
 		}
 	}

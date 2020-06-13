@@ -6,11 +6,11 @@
 Wall::Wall(int textureNumber)
 {
 	UNREFERENCED_PARAMETER(textureNumber);
-	AddComponent(new BoxColliderComponent( 10.f, 10.f ));
+	AddComponent(new BoxColliderComponent(8.f, 8.f));
 
-	TextureRendererComponent *texComp{ new TextureRendererComponent() }; 
-	texComp->SetTexture("Textures/LevelBlocks.png");
-	texComp->SetRenderDimensions(0, 0, 8, 8); // TODO make this work based on texture number
-	
-	AddComponent(texComp);
+	//TextureRendererComponent *texComp{ new TextureRendererComponent() }; TODO uncomment when physics works
+	//texComp->SetTexture("Textures/LevelBlocks.png");
+	//texComp->SetRenderDimensions(0, 0, 8, 8); // TODO make this work based on texture number
+	//
+	//AddComponent(texComp);
 }
