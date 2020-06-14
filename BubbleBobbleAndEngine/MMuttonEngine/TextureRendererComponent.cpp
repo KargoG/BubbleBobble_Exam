@@ -69,6 +69,7 @@ BaseComponent * TextureRendererComponent::Clone() const
 	else
 	{
 		tc->m_pTexture = ResourceManager::GetInstance().LoadTexture(m_TextureName);
+		tc->m_TextureName = m_TextureName;
 		tc->SetRenderDimensions(m_pTexture->GetPosition().x, m_pTexture->GetPosition().y, m_pTexture->GetDimension().x, m_pTexture->GetDimension().y);
 	}
 
