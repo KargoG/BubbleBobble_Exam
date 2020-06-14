@@ -8,8 +8,10 @@
 class TransformComponent final : public BaseComponent
 {
 public:
+	TransformComponent() = default;
 	TransformComponent(float x, float y, float z = 0);
 	TransformComponent(const glm::vec3& position);
+	TransformComponent(const glm::vec3& position, const glm::vec3& scale);
 	
 	virtual void Start() override{};
 	virtual void Update() override{};
@@ -19,9 +21,14 @@ public:
 	const glm::vec3& GetPosition() const { return m_Position; }
 	void SetPosition(float x, float y, float z = 0);
 	void SetPosition(const glm::vec3& position){ m_Position = position;	}
+	
+	const glm::vec3& GetScale() const { return m_Scale; }
+	void SetScale(float x, float y, float z = 0);
+	void SetScale(const glm::vec3& scale){ m_Scale = scale; }
 
 	BaseComponent * Clone() const override;
 	void LoadFromJson( const nlohmann::json &json ) override;
 private:
-	glm::vec3 m_Position{};
+	glm::vec3 m_Position{0, 0, 0};
+	glm::vec3 m_Scale{1, 1, 1};
 };

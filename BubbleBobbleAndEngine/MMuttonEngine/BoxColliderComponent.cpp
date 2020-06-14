@@ -10,6 +10,12 @@ BoxColliderComponent::BoxColliderComponent(float width, float height) : m_Dimens
 {
 }
 
+BoxColliderComponent::~BoxColliderComponent()
+{
+	if(m_pGameObject && m_pGameObject->GetScene())
+		m_pGameObject->GetScene()->RemoveCollider(this);
+}
+
 void BoxColliderComponent::Start()
 {
 	m_pGameObject->GetScene()->AddCollider(this);
@@ -19,9 +25,10 @@ void BoxColliderComponent::Render() const
 {
 #if _DEBUG
 	glm::vec2 pos = m_pGameObject->GetComponent<TransformComponent>()->GetPosition();
+	const glm::vec2& scale{ m_pGameObject->GetComponent<TransformComponent>()->GetScale() };
 	
 	Renderer::GetInstance().SetRenderColor(0, 255, 0);
-	Renderer::GetInstance().RenderRect(pos, m_Dimensions);
+	Renderer::GetInstance().RenderRect(pos, m_Dimensions * scale);
 #endif
 }
 
@@ -29,10 +36,12 @@ TouchFlags BoxColliderComponent::CalculateCollisions(const BoxColliderComponent 
 {
 	TouchFlags flags{ TouchFlags::None };
 	glm::vec2 position{ GetGameObject()->GetComponent<TransformComponent>()->GetPosition() };
-	glm::vec2 dimensions{ GetDimensions() };
+	const glm::vec2& scale{ GetGameObject()->GetComponent<TransformComponent>()->GetScale() };
+	glm::vec2 dimensions{ GetDimensions() * scale };
 	
-	glm::vec2 colliderDimensions{ pOtherCollider->GetDimensions() };
 	const glm::vec2& colliderPosition{ pOtherCollider->GetGameObject()->GetComponent<TransformComponent>()->GetPosition() };
+	const glm::vec2& colliderScale{ pOtherCollider->GetGameObject()->GetComponent<TransformComponent>()->GetScale() };
+	glm::vec2 colliderDimensions{ pOtherCollider->GetDimensions() * colliderScale };
 	
 	bool collisionXAxis{ position.x < colliderPosition.x + colliderDimensions.x &&
 								   position.x + dimensions.x > colliderPosition.x };

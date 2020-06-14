@@ -61,15 +61,19 @@ void TextComponent::Render() const
 	if (m_pTexture != nullptr)
 	{
 		auto pos = glm::vec3{ 0, 0, 0 };
+		auto scale = glm::vec3{ 1, 1, 1 };
 		if(m_pGameObject)
 		{
 			const TransformComponent* pTransform = m_pGameObject->GetComponent<TransformComponent>();
 			
 			if (pTransform)
+			{
 				pos = pTransform->GetPosition();
+				scale = pTransform->GetScale();
+			}
 		}
 		 
-		Renderer::GetInstance().RenderTexture(*m_pTexture, pos);
+		Renderer::GetInstance().RenderTexture(*m_pTexture, pos, scale);
 	}
 }
 

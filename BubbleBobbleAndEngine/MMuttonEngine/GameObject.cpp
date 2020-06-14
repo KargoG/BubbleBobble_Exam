@@ -84,6 +84,14 @@ void GameObject::Render() const
 	}
 }
 
+void GameObject::OnCollision(const BoxColliderComponent *otherCollider )
+{
+	for (BaseComponent* pComponent : m_pComponents)
+	{
+		pComponent->OnCollision(otherCollider);
+	}
+}
+
 void GameObject::Swap()
 {
 	for (BaseComponent* pComponent : m_pComponents)

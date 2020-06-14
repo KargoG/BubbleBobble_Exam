@@ -1,6 +1,7 @@
 #pragma once
 #include <json.hpp>
 
+class BoxColliderComponent;
 class Scene;
 class BaseComponent;
 
@@ -48,6 +49,7 @@ public:
 	virtual void Update();
 	virtual void PhysicsUpdate();
 	virtual void Render() const;
+	virtual void OnCollision(const BoxColliderComponent* otherCollider );
 	virtual void Swap();
 	virtual GameObject* Clone() const;
 
@@ -59,7 +61,7 @@ public:
 	GameObject& operator=(GameObject&& other) = delete;
 
 	template<typename T>
-	T* GetComponent();
+	T* GetComponent() const;
 	
 	void AddComponent(BaseComponent * pComponent);
 	void SetScene(Scene* pScene) { m_pScene = pScene; };
@@ -82,7 +84,7 @@ private:
 };
 
 template< typename T >
-T* GameObject::GetComponent()
+T* GameObject::GetComponent() const
 {
 	for(BaseComponent* pComponent : m_pComponents )
 	{

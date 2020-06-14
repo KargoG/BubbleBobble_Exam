@@ -106,4 +106,19 @@ void ResourceManager::CleanUp()
 		delete prototype.second;
 	}
 	m_Prototypes.clear();
+	
+	for (std::pair<const std::string, Font*>& font : m_Fonts)
+	{
+		delete font.second;
+	}
+	m_Fonts.clear();
+	
+	for (std::pair<const std::string, SDL_Texture*>& texture : m_Textures)
+	{
+		SDL_DestroyTexture(texture.second);
+	}
+	m_Textures.clear();
+
+
+	
 }

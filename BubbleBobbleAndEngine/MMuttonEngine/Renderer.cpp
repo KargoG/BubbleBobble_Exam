@@ -37,13 +37,16 @@ void Renderer::Destroy()
 	}
 }
 
-void Renderer::RenderTexture(const Texture2D& texture, glm::vec2 dstPos) const
+void Renderer::RenderTexture(const Texture2D& texture, glm::vec2 dstPos, glm::vec2 scale) const
 {
 	SDL_Rect dst;
 	dst.x = static_cast<int>(dstPos.x);
 	dst.y = static_cast<int>(dstPos.y);
 	
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
+	dst.w = int(scale.x * dst.w);
+	dst.h = int(scale.y * dst.h);
+	
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
@@ -58,13 +61,13 @@ void Renderer::RenderTexture(const Texture2D& texture, glm::vec2 dstPos) const
 //}
 
 void Renderer::RenderTexture( const Texture2D &texture, glm::vec2 dstPos, glm::vec2 srcPos,
-	glm::vec2 srcDimensions ) const
+	glm::vec2 srcDimensions, glm::vec2 scale ) const
 {
 	SDL_Rect dst;
 	dst.x = static_cast<int>(dstPos.x);
 	dst.y = static_cast<int>(dstPos.y);
 	dst.w = static_cast<int>(srcDimensions.x);
-	dst.h = static_cast<int>(srcDimensions.y); // TODO make use of scale of object?
+	dst.h = static_cast<int>(srcDimensions.y);
 
 	SDL_Rect src;
 	src.x = static_cast<int>(srcPos.x);
@@ -72,6 +75,9 @@ void Renderer::RenderTexture( const Texture2D &texture, glm::vec2 dstPos, glm::v
 	src.w = static_cast<int>(srcDimensions.x);
 	src.h = static_cast<int>(srcDimensions.y);
 
+	dst.w = int(scale.x * dst.w);
+	dst.h = int(scale.y * dst.h);
+	
 	MirrorRect(dst);
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
 }

@@ -11,6 +11,7 @@ class BoxColliderComponent :
 {
 public:
 	BoxColliderComponent(float width = 1, float height = 1);
+	~BoxColliderComponent() override;
 	void Start() override;
 	void Update() override {}
 	void PhysicsUpdate() override {};

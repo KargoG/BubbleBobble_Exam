@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "TransformComponent.h"
 #include "Time.h"
+#include "GameData.h"
 #if _DEBUG
 #include "Renderer.h"
 #endif
@@ -46,14 +47,14 @@ void RigidbodyComponent::PhysicsUpdate()
 		
 		int newFlags{ int(m_pBoxCollider->CalculateCollisions(pCollider)) };
 		m_TouchFlags = TouchFlags(int(m_TouchFlags) | newFlags);
-
-
+		
 		if (newFlags == int(TouchFlags::None))
 			continue;
 
-		glm::vec2 colliderDimensions{ pCollider->GetDimensions() };
 		const glm::vec2& colliderPosition{ pCollider->GetGameObject()->GetComponent<TransformComponent>()->GetPosition() };
-		
+		const glm::vec2& colliderScale{ pCollider->GetGameObject()->GetComponent<TransformComponent>()->GetScale() };
+		const glm::vec2 colliderDimensions{ pCollider->GetDimensions() * colliderScale };
+
 		if(newFlags & int(TouchFlags::Left))
 		{
 			adjustedPosition.x = colliderPosition.x + colliderDimensions.x;
@@ -70,7 +71,10 @@ void RigidbodyComponent::PhysicsUpdate()
 		{
 			adjustedPosition.y = colliderPosition.y - playerDimensions.y;
 		}
-		
+
+		// Call OnCollision
+		m_pGameObject->OnCollision(pCollider);
+		pCollider->GetGameObject()->OnCollision(m_pBoxCollider);
 	}
 	
 
@@ -111,15 +115,16 @@ void RigidbodyComponent::Render() const
 		Renderer::GetInstance().SetRenderColor(255, 0, 0);
 
 		const glm::vec2& bottomLeft{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
+		const glm::vec2& colliderScale{ m_pGameObject->GetComponent<TransformComponent>()->GetScale() };
 		
 		glm::vec2 topLeft{ bottomLeft };
-		topLeft.y += 8;
+		topLeft.y += GameData::GetInstance().GetSpriteHeight() * colliderScale.y;
 
 		glm::vec2 bottomRight{ bottomLeft };
-		bottomRight.x += 8;
+		bottomRight.x += GameData::GetInstance().GetSpriteWidth() * colliderScale.x;
 
 		glm::vec2 topRight{ bottomRight };
-		topRight.y += 8; // TODO bad literal
+		topRight.y += GameData::GetInstance().GetSpriteHeight() * colliderScale.y;
 		
 		if(int(m_TouchFlags) & int(TouchFlags::Right))
 		{

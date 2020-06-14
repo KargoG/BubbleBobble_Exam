@@ -17,12 +17,7 @@ Scene::~Scene()
 
 void Scene::RemoveCollider( BoxColliderComponent *colliderToRemove )
 {
-	auto it = std::find(m_Collider.cbegin(), m_Collider.cend(), colliderToRemove);
-
-	if (it == m_Collider.cend())
-		return;
-
-	m_Collider.erase(it);
+	m_ColliderToRemove.push_back(colliderToRemove);
 }
 
 void Scene::Add(GameObject* object)
@@ -31,6 +26,14 @@ void Scene::Add(GameObject* object)
 		throw std::exception{"A GameObject can only be part of 1 Scene!"};
 	
 	m_ObjectsToAdd.push_back(object);
+}
+
+void Scene::Remove( GameObject *toRemove )
+{
+	if (toRemove->GetScene() != this)
+		throw std::exception{ "You cant remove an object from a Scene its not part of!" };
+
+	m_ObjectsToRemove.push_back(toRemove);
 }
 
 void Scene::Start()
@@ -86,6 +89,12 @@ void Scene::Swap()
 	}
 	m_ObjectsToRemove.clear();
 	
+	for (BoxColliderComponent* colliderToRemove : m_ColliderToRemove)
+	{
+		m_Collider.erase(std::find(m_Collider.cbegin(), m_Collider.cend(), colliderToRemove));
+	}
+	m_ColliderToRemove.clear();
+	
 	for (GameObject* objectToAdd : m_ObjectsToAdd)
 	{
 		m_Objects.push_back(objectToAdd);
@@ -93,7 +102,7 @@ void Scene::Swap()
 		objectToAdd->Start();
 	}
 	m_ObjectsToAdd.clear();
-
+	
 	for( GameObject * object : m_Objects )
 	{
 		object->Swap();

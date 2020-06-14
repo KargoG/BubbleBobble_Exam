@@ -9,6 +9,7 @@ class Scene final
 	friend Scene* SceneManager::CreateScene(const std::string& name);
 public:
 	void Add(GameObject* object);
+	void Remove(GameObject* toRemove);
 
 	void Start();
 	void Update();
@@ -17,7 +18,7 @@ public:
 	void Swap();
 
 	~Scene();
-	
+
 	Scene(const Scene& other) = delete;
 	Scene(Scene&& other) = delete;
 	Scene& operator=(const Scene& other) = delete;
@@ -38,6 +39,7 @@ private:
 	std::vector <GameObject*> m_ObjectsToAdd{};
 	std::vector <GameObject*> m_ObjectsToRemove{};
 	std::vector <BoxColliderComponent*> m_Collider{};
+	std::vector <BoxColliderComponent*> m_ColliderToRemove{};
 
 	static unsigned int m_IdCounter;
 	

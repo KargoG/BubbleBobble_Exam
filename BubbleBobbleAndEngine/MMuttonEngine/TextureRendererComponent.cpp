@@ -26,28 +26,28 @@ void TextureRendererComponent::PhysicsUpdate()
 void TextureRendererComponent::Render() const
 {
 	glm::vec3 pos{ 0, 0, 0 };
+	glm::vec3 scale{ 1, 1, 1 };
 	if(m_pGameObject)
 	{
 		const auto transform = m_pGameObject->GetComponent<TransformComponent>();
 		if (transform)
 		{
 			pos = transform->GetPosition();
+			scale = transform->GetScale();
 		}
 	}
 
 	if(m_pTexture->GetPosition().x < 0)
-		Renderer::GetInstance().RenderTexture(*m_pTexture, pos);
+		Renderer::GetInstance().RenderTexture(*m_pTexture, pos, scale);
 	else
-		Renderer::GetInstance().RenderTexture(*m_pTexture, pos, m_pTexture->GetPosition(), m_pTexture->GetDimension());
+		Renderer::GetInstance().RenderTexture(*m_pTexture, pos, m_pTexture->GetPosition(), m_pTexture->GetDimension(), scale);
 }
 
 void TextureRendererComponent::SetTexture( const char * filename)
 {
 	m_TextureName = filename;
-	
-	if(m_pTexture)
-		delete m_pTexture; // TODO Remove when Resource manager takes ownership of textures
-	
+	if (m_pTexture)
+		delete m_pTexture;
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(m_TextureName);
 }
 

@@ -175,10 +175,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationComponent.h" />
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="BinaryReader.h" />
     <ClInclude Include="BoxColliderComponent.h" />
-    <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameObject.h" />
@@ -198,10 +198,10 @@
     <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationComponent.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="BinaryReader.cpp" />
     <ClCompile Include="BoxColliderComponent.cpp" />
-    <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameObject.cpp" />

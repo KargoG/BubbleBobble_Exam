@@ -2,11 +2,8 @@
 #include <unordered_map>
 #include <json.hpp>
 #include "BaseComponent.h"
-#include "BaseComponent.h"
-#include "BaseComponent.h"
-#include "BaseComponent.h"
-#include "BaseComponent.h"
 
+class BoxColliderComponent;
 class GameObject;
 
 class BaseComponent
@@ -18,8 +15,10 @@ public:
 	virtual void Render() const = 0;
 	virtual BaseComponent* Clone() const = 0;
 	virtual void LoadFromJson(const nlohmann::json& json) = 0;
+	virtual void OnCollision(const BoxColliderComponent*) {}
 	virtual void Swap(){};
 
+	
 	BaseComponent();
 	virtual ~BaseComponent() = default;
 	
