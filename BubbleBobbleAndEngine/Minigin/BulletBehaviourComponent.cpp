@@ -28,19 +28,19 @@ void BulletBehaviourComponent::PhysicsUpdate()
 
 void BulletBehaviourComponent::OnCollision(const BoxColliderComponent* other)
 {
-	if (GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01) // Bubble
+	if (GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer02) // Bubble
 	{
 		if(other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer03)
 		{
-			other->GetGameObject()->GetComponent<PlayerControllerComponent>()->TakeDamage(); // TODO what if enemy is not controlled by player?
+			other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 			m_pGameObject->GetScene()->Remove(m_pGameObject);
 		}
 	}
 	else // Bullet
 	{
-		if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer03)
+		if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
 		{
-			other->GetGameObject()->GetComponent<PlayerControllerComponent>()->TakeDamage(); // TODO what if enemy is not controlled by player?
+			other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 			m_pGameObject->GetScene()->Remove(m_pGameObject);
 		}
 	}

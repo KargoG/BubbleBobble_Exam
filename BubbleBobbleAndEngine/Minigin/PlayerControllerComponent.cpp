@@ -19,7 +19,7 @@ void PlayerControllerComponent::Start()
 
 	m_Input->SetControllerNumber(m_PlayerNumber);
 	m_Input->RegisterCommand(ControllerButton::ButtonA, new JumpCommand{});
-	m_Input->RegisterCommand(ControllerButton::ButtonX, new ShootCommand{});
+	m_Input->RegisterCommand(ControllerButton::ButtonY, new ShootCommand{});
 }
 
 void PlayerControllerComponent::Update()
@@ -30,19 +30,32 @@ void PlayerControllerComponent::Update()
 	if (input)
 		input->Execute(this);
 
-	float xInput = m_Input->GetAxis(ControllerAxis::LeftThumbstickX);
-	m_pRB->AddVelocity(xInput * m_WalkSpeed * Time::GetInstance().GetDeltaTime(), 0);
-
+	m_XInput = m_Input->GetAxis(ControllerAxis::LeftThumbstickX);
 	if(m_LookingRight)
-		m_LookingRight = xInput >= 0;
+		m_LookingRight = m_XInput >= 0;
 	else
-		m_LookingRight = xInput > 0;
+		m_LookingRight = m_XInput > 0;
+}
+
+void PlayerControllerComponent::PhysicsUpdate()
+{
+	m_pRB->Move(m_XInput * m_WalkSpeed * Time::GetInstance().GetPhysicsDeltaTime(), 0);
 }
 
 void PlayerControllerComponent::TakeDamage()
 {
 	m_PlayerLifes--;
-	// TODO
+
+	if (m_PlayerLifes < 0)
+		Die();
+	
+	m_PlayerSubject.Notify(this, BB_PLAYER_TAKES_DAMAGE);
+}
+
+void PlayerControllerComponent::Die()
+{
+	m_PlayerSubject.Notify(this, BB_PLAYER_DIED);
+	m_pGameObject->GetScene()->Remove(m_pGameObject);
 }
 
 BaseComponent * PlayerControllerComponent::Clone() const
@@ -58,6 +71,7 @@ BaseComponent * PlayerControllerComponent::Clone() const
 void PlayerControllerComponent::LoadFromJson( const nlohmann::json &json )
 {
 	m_WalkSpeed = json.at("WalkSpeed").get<float>();
+	m_PlayerNumber = json.at("PlayerNumber").get<int>();
 }
 
 void PlayerControllerComponent::Jump()
@@ -67,11 +81,22 @@ void PlayerControllerComponent::Jump()
 
 void PlayerControllerComponent::Shoot()
 {
-	GameObject *bubble{ ResourceManager::GetInstance().SpawnPrototype("Bubble") };
-	m_pGameObject->GetScene()->Add(bubble);
+	GameObject *attack{};
+
+	if (GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01) // Bubble
+	{
+		attack = ResourceManager::GetInstance().SpawnPrototype("Bubble");
+	}
+	else
+	{
+		attack = ResourceManager::GetInstance().SpawnPrototype("Bullet");
+	}
+
+	m_pGameObject->GetScene()->Add(attack);
 
 	glm::vec3 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
-
-	bubble->GetComponent<TransformComponent>()->SetPosition(pos);
-	bubble->GetComponent<BulletBehaviourComponent>()->SetMovingRight(m_LookingRight);
+	pos.y += 2;
+	
+	attack->GetComponent<TransformComponent>()->SetPosition(pos);
+	attack->GetComponent<BulletBehaviourComponent>()->SetMovingRight(m_LookingRight);
 }

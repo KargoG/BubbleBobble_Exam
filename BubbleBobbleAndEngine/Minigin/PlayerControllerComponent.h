@@ -1,6 +1,7 @@
 #pragma once
-#include <ControllerComponent.h>
+#include "ControllerComponent.h"
 #include "InputComponent.h"
+#include "Subject.h"
 
 class RigidbodyComponent;
 
@@ -10,8 +11,7 @@ class PlayerControllerComponent :
 public:
 	void Start() override;
 	void Update() override;
-	void PhysicsUpdate() override {};
-	void TakeDamage();
+	void PhysicsUpdate() override;
 	void Render() const override {};
 	BaseComponent* Clone() const override;
 	void LoadFromJson(const nlohmann::json&) override;
@@ -20,17 +20,22 @@ public:
 
 	void Jump() override;
 	void Shoot() override;
+	void TakeDamage() override;
+	void Die();
 
-	bool IsLookingRight() const { return m_LookingRight; }
-	
+	int GetPlayerNumber() const { return m_PlayerNumber; };
+
+	void AddObserver(Observer* observer) { m_PlayerSubject.AddObserver(observer); };
+	void RemoveObserver(Observer* observer) { m_PlayerSubject.RemoveObserver(observer); }
 private:
 	InputComponent* m_Input{ nullptr };
 
 	int m_PlayerNumber{0};
 	int m_PlayerLifes{ 4 };
 
-	float m_WalkSpeed{50};
-	bool m_LookingRight{ true };
+	float m_XInput{};
+	
+	Subject m_PlayerSubject{};
 };
 
 class JumpCommand : public Command

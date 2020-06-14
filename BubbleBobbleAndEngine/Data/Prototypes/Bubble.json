@@ -1,10 +1,10 @@
 {
-  "IgnoredLayers":{ "1":1 },
-  "PhysicsLayer": 1,
+  "IgnoredLayers":{ "1":1, "2":2 },
+  "PhysicsLayer": 2,
   "BoxColliderComponent":
   {
-    "Width": 8,
-    "Height": 8,
+    "Width": 16,
+    "Height": 16,
     "UseOneWay": false
   },
   "RigidbodyComponent": {
@@ -14,9 +14,9 @@
   {
     "Texture": "Textures/Sprites1.png",
     "X": 0,
-    "Y": 96,
-    "Width": 8,
-    "Height": 8
+    "Y": 192,
+    "Width": 16,
+    "Height": 16
   },
   "BulletBehaviourComponent": {
     "SpeedVertical": 50.0,

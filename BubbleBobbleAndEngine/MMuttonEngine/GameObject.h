@@ -88,9 +88,11 @@ T* GameObject::GetComponent() const
 {
 	for(BaseComponent* pComponent : m_pComponents )
 	{
-		if(typeid(T) == typeid(*pComponent))
+		T* castComponent{ dynamic_cast<T*>(pComponent) };
+		
+		if(castComponent)
 		{
-			return reinterpret_cast<T*>(pComponent);
+			return castComponent;
 		}
 	}
 

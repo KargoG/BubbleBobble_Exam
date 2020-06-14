@@ -55,8 +55,8 @@ TouchFlags BoxColliderComponent::CalculateCollisions(const BoxColliderComponent 
 		
 	if (position.x < colliderPosition.x + colliderDimensions.x && position.x > colliderPosition.x) // Left
 	{
-		if (colliderPosition.y + colliderDimensions.y - position.y > m_TouchEpsilon /*||
-			playerPosition.y + playerDimensions.y - colliderPosition.y > m_TouchEpsilon*/) // check if left is an actual wall and the touch isn't a fluke
+		if ((colliderPosition.y + colliderDimensions.y - position.y) > m_TouchEpsilon/* ||
+			abs(position.y + dimensions.y - colliderPosition.y) > m_TouchEpsilon*/) // check if left is an actual wall and the touch isn't a fluke
 		{
 			flags = TouchFlags(int(flags) | int(TouchFlags::Left));
 			//m_Velocity.x = max(0, m_Velocity.x);
@@ -64,8 +64,8 @@ TouchFlags BoxColliderComponent::CalculateCollisions(const BoxColliderComponent 
 	}
 	if (position.x + dimensions.x > colliderPosition.x && position.x + dimensions.x < colliderPosition.x + colliderDimensions.x) // Right
 	{
-		if (colliderPosition.y + colliderDimensions.y - position.y > m_TouchEpsilon/* ||
-			playerPosition.y + playerDimensions.y - colliderPosition.y > m_TouchEpsilon*/) // check if right is an actual wall and the touch isn't a fluke
+		if ((colliderPosition.y + colliderDimensions.y - position.y) > m_TouchEpsilon/* ||
+			abs(position.y + dimensions.y - colliderPosition.y) > m_TouchEpsilon*/) // check if right is an actual wall and the touch isn't a fluke
 		{
 			flags = TouchFlags(int(flags) | int(TouchFlags::Right));
 			//m_Velocity.x = min(0, m_Velocity.x);

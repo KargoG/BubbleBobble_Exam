@@ -1,8 +1,22 @@
 #include "pch.h"
 #include "Scene.h"
 #include "GameObject.h"
+#include "GameMode.h"
 
 unsigned int Scene::m_IdCounter = 0;
+
+void Scene::SetGameMode( GameMode *gameMode )
+{
+	if (!gameMode)
+		throw std::exception("GameMode can not be null!\n");
+
+	if (m_pGameMode)
+		delete m_pGameMode;
+	
+	m_pGameMode = gameMode;
+	if (m_IsInitialized)
+		m_pGameMode->Start();
+}
 
 Scene::Scene(const std::string& name) : m_Name(name) {}
 
@@ -13,6 +27,8 @@ Scene::~Scene()
 		delete pGameObject;
 	}
 	m_Objects.clear();
+
+	delete m_pGameMode;
 }
 
 void Scene::RemoveCollider( BoxColliderComponent *colliderToRemove )
@@ -38,6 +54,11 @@ void Scene::Remove( GameObject *toRemove )
 
 void Scene::Start()
 {
+	if (!m_pGameMode)
+		m_pGameMode = new GameMode{};
+
+	m_pGameMode->Start();
+	
 	for (GameObject* objectToAdd : m_ObjectsToAdd)
 	{
 		m_Objects.push_back(objectToAdd);
@@ -57,6 +78,8 @@ void Scene::Update()
 {
 	if (!m_IsInitialized)
 		Start();
+
+	m_pGameMode->Update();
 	
 	for(auto& object : m_Objects)
 	{
@@ -66,6 +89,8 @@ void Scene::Update()
 
 void Scene::PhysicsUpdate()
 {
+	m_pGameMode->PhysicsUpdate();
+	
 	for (auto& object : m_Objects)
 	{
 		object->PhysicsUpdate();
@@ -74,6 +99,8 @@ void Scene::PhysicsUpdate()
 
 void Scene::Render() const
 {
+	m_pGameMode->Render();
+	
 	for (const auto& object : m_Objects)
 	{
 		object->Render();
@@ -82,10 +109,15 @@ void Scene::Render() const
 
 void Scene::Swap()
 {
+	m_pGameMode->Swap();
 	for (GameObject* objectToRemove : m_ObjectsToRemove)
 	{
-		m_Objects.erase(std::find(m_Objects.cbegin(), m_Objects.cend(), objectToRemove));
-		delete objectToRemove;
+		auto it = std::find(m_Objects.cbegin(), m_Objects.cend(), objectToRemove);
+		if (it != m_Objects.cend())
+		{
+			m_Objects.erase(it);
+			delete objectToRemove;
+		}
 	}
 	m_ObjectsToRemove.clear();
 	

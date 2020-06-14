@@ -15,8 +15,16 @@ public:
 
 	virtual void Jump() = 0;
 	virtual void Shoot() = 0;
-	
+	virtual void TakeDamage() = 0;
+	virtual void Die() = 0;
+
+	bool IsLookingRight() const { return m_LookingRight; }
+	RigidbodyComponent* GetRigidbody() const { return m_pRB; };
+	float GetWalkSpeed() const { return m_WalkSpeed; };
 protected:
 	RigidbodyComponent* m_pRB{ nullptr };
+
+	float m_WalkSpeed{ 50 };
+	bool m_LookingRight{ true };
 };
 

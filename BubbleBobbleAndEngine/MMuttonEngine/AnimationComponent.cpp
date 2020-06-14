@@ -38,17 +38,6 @@ void AnimationComponent::Update()
 	}
 }
 
-BaseComponent * AnimationComponent::Clone() const
-{
-	// TODO !!!!!!!!!!!!!
-	return nullptr;
-}
-
-void AnimationComponent::LoadFromJson( const nlohmann::json & )
-{
-	// TODO !!!!!!!!!!!!!
-}
-
 SpriteAnimationState::SpriteAnimationState( const std::string &spriteSheetName )
 {
 	m_TextureName = spriteSheetName;

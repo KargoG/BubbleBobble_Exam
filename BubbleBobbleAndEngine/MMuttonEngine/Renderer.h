@@ -2,7 +2,8 @@
 #include "Singleton.h"
 #pragma warning(push)
 #pragma warning (disable:4201)
-#include <glm/vec2.hpp>
+//#include <glm/vec2.hpp>
+#include "../3rdParty/glm/glm/detail/type_vec2.hpp"
 #pragma warning(pop)
 #include <SDL_hints.h>
 #include <SDL.h>

@@ -9,17 +9,19 @@
 #include <glm/vec3.hpp>
 #pragma warning(pop)
 #include "TransformComponent.h"
-#include "Player.h"
 #include "ResourceManager.h"
 #include <BinaryReader.h>
 #include "GameData.h"
+#include "VersusMode.h"
+#include "SingleMode.h"
+#include "CoopMode.h"
 
 void LevelLoader::Init()
 {
 	std::string fileLocation{ "../Data/Level/SeperatedLevelData.dat" };
 	
 	BinaryReader reader{};
-	reader.OpenReader(fileLocation); // TODO Load enemies
+	reader.OpenReader(fileLocation);
 	
 	int levelNumber{0};
 	for( Scene *& level : m_Levels )
@@ -70,11 +72,78 @@ void LevelLoader::Init()
 
 	
 	reader.CloseReader();
+
+	// read Enemies
+	fileLocation = "../Data/Level/SeperatedEnemyData.dat";
+	reader.OpenReader(fileLocation);
+
+	for (std::vector<EnemyData>& enemies : m_Enemies)
+	{
+		while (true)
+		{
+			EnemyData newEnemy{};
+			
+			char byte[3]{};
+			reader.ReadVarFromFile(byte[0]);
+
+			if (byte[0] == 0b00000000)
+				break;
+
+			reader.ReadVarFromFile(byte[1]);
+			reader.ReadVarFromFile(byte[2]);
+
+			char enemyType{ byte[0] & 0b00000111 };
+			
+			switch(EnemyType(enemyType))
+			{
+			case EnemyType::ZenChan:
+				newEnemy.EnemyType = EnemyType::ZenChan;
+				break;
+			case EnemyType::Maita:
+				newEnemy.EnemyType = EnemyType::Maita;
+				break;
+			default:
+				newEnemy.EnemyType = EnemyType::ZenChan;
+			}
+
+			newEnemy.Column = (byte[0] & 0b11111000) >> 3;
+			newEnemy.Row = (byte[1] & 0b11111000) >> 3;
+			newEnemy.Row = GameData::GetInstance().GetLevelHeight() - newEnemy.Row + 1;
+			
+			enemies.push_back(newEnemy);
+		}
+	}
+
+	reader.CloseReader();
 }
 
-void LevelLoader::LoadLevel( int level, GameMode )
+void LevelLoader::LoadLevel( int level, BubbleBobbleGameMode gameMode )
 {
 	SceneManager::GetInstance().SetActiveScene("Level" + std::to_string(level));
 
-	// TODO Spawn enemies in Single and duo game mode
+	switch(gameMode)
+	{
+	case BubbleBobbleGameMode::Single:
+	{
+		SingleMode* singleMode{ new SingleMode{ m_Enemies[level], level } };
+
+		SceneManager::GetInstance().GetActiveScene()->SetGameMode(singleMode);
+		break;
+	}
+	case BubbleBobbleGameMode::Coop:
+	{
+		CoopMode* coopMode{ new CoopMode{ m_Enemies[level], level } };
+
+		SceneManager::GetInstance().GetActiveScene()->SetGameMode(coopMode);
+		break;
+	}
+	case BubbleBobbleGameMode::Versus:
+	{
+		VersusMode* versusMode{ new VersusMode{level} };
+
+		SceneManager::GetInstance().GetActiveScene()->SetGameMode(versusMode);
+		break;
+	}
+	default: ;
+	}
 }

@@ -1,10 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
-#pragma warning(push)
-#pragma warning (disable:4201)
-#include <glm/vec2.hpp>
 #include "RigidbodyComponent.h"
-#pragma warning(pop)
 
 class BoxColliderComponent :
     public BaseComponent

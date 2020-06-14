@@ -8,10 +8,11 @@
 #include "AnimationComponent.h"
 #include "GameData.h"
 #include "AnimationStates.h"
+#include "BubbleBobbleAnimationComponent.h"
 
 Player::Player()
 {
-	AddComponent(new BoxColliderComponent(float(GameData::GetInstance().GetSpriteWidth()), float(GameData::GetInstance().GetSpriteHeight())));
+	AddComponent(new BoxColliderComponent(float(GameData::GetInstance().GetSpriteWidth() - 1), float(GameData::GetInstance().GetSpriteHeight() - 1)));
 
 	TextureRendererComponent *texComp{ new TextureRendererComponent() }; 
 	texComp->SetTexture("Textures/Sprites0.png");
@@ -28,8 +29,9 @@ Player::Player()
 	PlayerControllerComponent* controller = new PlayerControllerComponent{};
 	AddComponent(controller);
 
-	AddComponent(new AnimationComponent{new PlayerWalkingRight{}});
+	AddComponent(new BubbleBobbleAnimationComponent{new PlayerWalkingRight{}});
 	
 	SetPhysicsLayer(PhysicsLayer::Layer01);
 	AddIgnoredPhysicsLayers(PhysicsLayer::Layer01);
+	AddIgnoredPhysicsLayers(PhysicsLayer::Layer02);
 }

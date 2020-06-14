@@ -18,6 +18,8 @@
 #include "TransformComponent.h"
 #include "BulletBehaviourComponent.h"
 #include "AIControllerComponent.h"
+#include "BubbleBobbleAnimationComponent.h"
+#include "TextComponent.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -45,6 +47,22 @@ void Minigin::Initialize()
 	Renderer::GetInstance().Init(m_Window);
 }
 
+class StartSingle : public Command
+{
+public:
+	void Execute( ControllerComponent * ) override{ LevelLoader::GetInstance().LoadLevel(0, BubbleBobbleGameMode::Single); }
+};
+class StartCoop : public Command
+{
+public:
+	void Execute( ControllerComponent * ) override{ LevelLoader::GetInstance().LoadLevel(0, BubbleBobbleGameMode::Coop); }
+};
+class StartVersus : public Command
+{
+public:
+	void Execute( ControllerComponent * ) override{ LevelLoader::GetInstance().LoadLevel(0, BubbleBobbleGameMode::Versus); }
+};
+
 /**
  * Code constructing the scene world starts here
  */
@@ -56,56 +74,65 @@ void Minigin::LoadGame() const
 	BaseComponent::RegisterComponent("FPS", new FPS{});
 	BaseComponent::RegisterComponent("PlayerControllerComponent", new PlayerControllerComponent{});
 	BaseComponent::RegisterComponent("BulletBehaviourComponent", new BulletBehaviourComponent{});
-	//BaseComponent::RegisterComponent("AIControllerComponent", new AIControllerComponent{});
+	BaseComponent::RegisterComponent("AIControllerComponent", new AIControllerComponent{});
+	BaseComponent::RegisterComponent("BubbleBobbleAnimationComponent", new BubbleBobbleAnimationComponent{ nullptr });
 
 	// Load Levels
 	LevelLoader::GetInstance().Init();
-	LevelLoader::GetInstance().LoadLevel(4);
 	
-	//auto scene = SceneManager::GetInstance().CreateScene("Demo");
-
-	//auto go{ new GameObject() };
-	//go->AddComponent(new TextureRendererComponent());
-	//go->GetComponent<TextureRendererComponent>()->SetTexture("background.jpg");
-	//scene->Add(go);
-
-	//go = new GameObject();
-	//go->AddComponent(new TransformComponent(216.f, 180.f));
-	//go->AddComponent(new TextureRendererComponent());
-	//go->GetComponent<TextureRendererComponent>()->SetTexture("logo.png");
-	//scene->Add(go);
 
 
-	//go = new GameObject();
-	//go->AddComponent(new TransformComponent(80.f, 20.f));
-	//
-	//auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	//auto tc = new TextComponent(font, "Programming 4 Assignment");
-	//go->AddComponent(tc);
-	//scene->Add(go);
+	Scene *startScene = SceneManager::GetInstance().CreateScene("MainMenuScene");
+	GameObject* input{ new GameObject{} };
 
-	//auto go = new GameObject();
-	//go->AddComponent(new TransformComponent(0.f, 0.f));
-	////auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 15);
-	//auto tc = new TextComponent("Lingua.otf", 15, "00 FPS");
-	//go->AddComponent(tc);
-	//go->AddComponent(new FPS());
-	//scene->Add(go);
+	InputComponent* ic{ new InputComponent() };
+	ic->RegisterCommand(ControllerButton::ButtonY, new StartSingle());
+	ic->RegisterCommand(ControllerButton::ButtonA, new StartCoop());
+	ic->RegisterCommand(ControllerButton::ButtonB, new StartVersus());
 
-	GameObject *player{ new Player{} };
-	GameObject *enemy{ new Enemy{} };
-
-	player->GetComponent<TransformComponent>()->SetPosition(40, 30, 0);
-	player->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
+	input->AddComponent(ic);
 	
-	enemy->GetComponent<TransformComponent>()->SetPosition(440, 30, 0);
-	enemy->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
+	GameObject* singleText{ new GameObject{} };
+	GameObject* coopText{ new GameObject{} };
+	GameObject* versusText{ new GameObject{} };
+	singleText->AddComponent(new TextComponent{ "Lingua.otf", 30, "Press Y to play Solo!" });
+	coopText->AddComponent(new TextComponent{ "Lingua.otf", 30, "Press A to play Coop!" });
+	versusText->AddComponent(new TextComponent{ "Lingua.otf", 30, "Press B to play Versus!" });
+
+	singleText->GetComponent<TransformComponent>()->SetPosition(0, 0, 0);
+	coopText->GetComponent<TransformComponent>()->SetPosition(0, 50, 0);
+	versusText->GetComponent<TransformComponent>()->SetPosition(0, 100, 0);
+
+	startScene->Add(input);
+	startScene->Add(singleText);
+	startScene->Add(coopText);
+	startScene->Add(versusText);
+
+	//SceneManager::GetInstance().SetActiveScene("MainMenuScene");
 
 	
-	enemy->GetComponent<PlayerControllerComponent>()->SetPlayerNumber(1);
+	GameObject *gameOverText{ new GameObject{} };
+
+	TextComponent* text{ new TextComponent{"Lingua.otf", 30, "GameOver"} };
+	gameOverText->AddComponent(text);
+
+	SceneManager::GetInstance().CreateScene("GameOverScene")->Add(gameOverText);
 	
-	SceneManager::GetInstance().GetActiveScene()->Add(player);
-	SceneManager::GetInstance().GetActiveScene()->Add(enemy);
+	GameObject *player1WinOverText{ new GameObject{} };
+	
+	text = new TextComponent{"Lingua.otf", 30, "Player One Wins"};
+	player1WinOverText->AddComponent(text);
+
+	SceneManager::GetInstance().CreateScene("PlayerOneWinScene")->Add(player1WinOverText);
+
+	GameObject *player2WinOverText{ new GameObject{} };
+
+	text = new TextComponent{"Lingua.otf", 30, "Player 2 Wins"};
+	player2WinOverText->AddComponent(text);
+
+	SceneManager::GetInstance().CreateScene("PlayerTwoWinScene")->Add(player2WinOverText);
+
+	LevelLoader::GetInstance().LoadLevel(5, BubbleBobbleGameMode::Single);
 }
 
 void Minigin::Cleanup()

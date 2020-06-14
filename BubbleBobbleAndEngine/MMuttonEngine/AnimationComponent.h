@@ -17,11 +17,14 @@ public:
 	
 	virtual void PhysicsUpdate() override{}
 	virtual void Render() const override{}
-	virtual BaseComponent * Clone() const override;
-	virtual void LoadFromJson( const nlohmann::json &json ) override;
+	virtual BaseComponent * Clone() const override = 0;
+	virtual void LoadFromJson( const nlohmann::json &json ) override = 0;
+	
+protected:
+	SpriteAnimationState* m_pCurrentState{ nullptr };
+	
 private:
 	// Only sprite animation support
-	SpriteAnimationState* m_pCurrentState{ nullptr };
 	TextureRendererComponent* m_pTextureRenderer{ nullptr };
 };
 
@@ -34,7 +37,8 @@ public:
 	virtual void OnEnter(TextureRendererComponent* pTextureRenderer);
 	SpriteAnimationState* Update(TextureRendererComponent* pTextureRenderer);
 
-	virtual SpriteAnimationState* UpdateState(const GameObject*) { return nullptr; };
+	virtual SpriteAnimationState* UpdateState(const GameObject*) { return nullptr; }
+	virtual SpriteAnimationState* Clone() = 0;
 
 protected:
 	float m_CycleProgress{ 0.f };

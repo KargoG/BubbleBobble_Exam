@@ -4,10 +4,6 @@
 #include <memory>
 #include "BaseComponent.h"
 #pragma comment(lib, "XInput.lib")
-#pragma warning(push)
-#pragma warning (disable:4201)
-#include <glm/vec2.hpp>
-#pragma warning(pop)
 
 class ControllerComponent;
 

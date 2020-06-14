@@ -20,7 +20,6 @@ TextComponent::TextComponent( const std::string &fontName, int fontSize, const s
 TextComponent::~TextComponent()
 {
 	delete m_pTexture;
-	delete m_pFont;
 }
 
 void TextComponent::Start()

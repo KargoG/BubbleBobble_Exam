@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "MiniginPCH.h"
 #include "ControllerComponent.h"
 #include "RigidbodyComponent.h"
 #include "GameObject.h"

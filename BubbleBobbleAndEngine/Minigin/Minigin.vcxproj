@@ -196,21 +196,28 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
   <ItemGroup>
     <ClInclude Include="AIControllerComponent.h" />
     <ClInclude Include="AnimationStates.h" />
+    <ClInclude Include="BubbleBobbleAnimationComponent.h" />
     <ClInclude Include="BulletBehaviourComponent.h" />
     <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="CoopMode.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EventCodes.h" />
     <ClInclude Include="FPS.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
+    <ClInclude Include="SingleMode.h" />
+    <ClInclude Include="VersusMode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIControllerComponent.cpp" />
     <ClCompile Include="AnimationStates.cpp" />
+    <ClCompile Include="BubbleBobbleAnimationComponent.cpp" />
     <ClCompile Include="BulletBehaviourComponent.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
+    <ClCompile Include="CoopMode.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FPS.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
@@ -225,6 +232,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     </ClCompile>
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
+    <ClCompile Include="SingleMode.cpp" />
+    <ClCompile Include="VersusMode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

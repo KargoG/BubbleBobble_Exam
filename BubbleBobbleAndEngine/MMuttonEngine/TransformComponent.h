@@ -1,7 +1,8 @@
 #pragma once
 #pragma warning(push)
 #pragma warning (disable:4201)
-#include <glm/vec3.hpp>
+//#include <glm/vec3.hpp>
+#include "../3rdParty/glm/glm/detail/type_vec3.hpp"
 #pragma warning(pop)
 #include "BaseComponent.h"
 

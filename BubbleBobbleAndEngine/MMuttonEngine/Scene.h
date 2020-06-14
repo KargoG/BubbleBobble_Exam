@@ -1,7 +1,9 @@
 #pragma once
 #include "SceneManager.h"
 #include "BoxColliderComponent.h"
+#include "GameObject.h"
 
+class GameMode;
 class GameObject;
 
 class Scene final
@@ -30,6 +32,11 @@ public:
 	void RemoveCollider(BoxColliderComponent* colliderToRemove);
 
 	const std::vector <BoxColliderComponent*>& GetCollider() const { return m_Collider; };
+
+	template<typename T>
+	T* GetObjectWithComponent() const;
+
+	void SetGameMode(GameMode* gameMode);
 	
 private: 
 	explicit Scene(const std::string& name);
@@ -44,4 +51,19 @@ private:
 	static unsigned int m_IdCounter;
 	
 	bool m_IsInitialized{ false };
+
+	GameMode* m_pGameMode{ nullptr };
 };
+
+template< typename T >
+T * Scene::GetObjectWithComponent() const
+{
+	for( GameObject * const gameObject : m_Objects )
+	{
+		T* component = gameObject->GetComponent<T>();
+		if (component)
+			return component;
+	}
+
+	return nullptr;
+}

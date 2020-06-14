@@ -4,10 +4,6 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "GameData.h"
-#pragma warning(push)
-#pragma warning (disable:4201)
-#include <glm/vec2.hpp>
-#pragma warning(pop)
 
 void Renderer::Init(SDL_Window * window)
 {

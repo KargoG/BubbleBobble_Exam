@@ -17,6 +17,9 @@
     <Filter Include="Helper">
       <UniqueIdentifier>{2dd1121b-c66d-4c14-ab0b-e1b0170b474d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameModes">
+      <UniqueIdentifier>{1d8ee2af-1427-4c5d-9914-f8a2e3df0beb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Minigin.h">
@@ -46,8 +49,25 @@
     <ClInclude Include="LevelLoader.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="BubbleBobbleAnimationComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="AnimationStates.h" />
-    <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="VersusMode.h">
+      <Filter>GameModes</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleMode.h">
+      <Filter>GameModes</Filter>
+    </ClInclude>
+    <ClInclude Include="EventCodes.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="CoopMode.h">
+      <Filter>GameModes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -80,7 +100,21 @@
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Helper</Filter>
     </ClCompile>
+    <ClCompile Include="BubbleBobbleAnimationComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="AnimationStates.cpp" />
-    <ClCompile Include="ControllerComponent.cpp" />
+    <ClCompile Include="VersusMode.cpp">
+      <Filter>GameModes</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleMode.cpp">
+      <Filter>GameModes</Filter>
+    </ClCompile>
+    <ClCompile Include="CoopMode.cpp">
+      <Filter>GameModes</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

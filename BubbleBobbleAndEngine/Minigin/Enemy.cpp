@@ -8,6 +8,8 @@
 #include "BoxColliderComponent.h"
 #include "GameData.h"
 #include "AnimationStates.h"
+#include "AIControllerComponent.h"
+#include "BubbleBobbleAnimationComponent.h"
 
 Enemy::Enemy()
 {
@@ -15,7 +17,7 @@ Enemy::Enemy()
 
 	TextureRendererComponent* texComp{ new TextureRendererComponent() };
 	texComp->SetTexture("Textures/Sprites0.png");
-	texComp->SetRenderDimensions(0, 14.f * GameData::GetInstance().GetSpriteHeight(), float(GameData::GetInstance().GetSpriteWidth()), float(GameData::GetInstance().GetSpriteHeight())); // TODO make this work based on texture number
+	texComp->SetRenderDimensions(0, 14.f * GameData::GetInstance().GetSpriteHeight(), float(GameData::GetInstance().GetSpriteWidth()), float(GameData::GetInstance().GetSpriteHeight()));
 
 	AddComponent(texComp);
 
@@ -25,11 +27,13 @@ Enemy::Enemy()
 
 	AddComponent(new InputComponent{});
 
+	//AIControllerComponent* controller = new AIControllerComponent{};
 	PlayerControllerComponent* controller = new PlayerControllerComponent{};
 	AddComponent(controller);
 
-	AddComponent(new AnimationComponent{ new MaitaWalkingRight{} });
+	AddComponent(new BubbleBobbleAnimationComponent{ new MaitaWalkingRight{} });
 	
 	SetPhysicsLayer(PhysicsLayer::Layer03);
 	AddIgnoredPhysicsLayers(PhysicsLayer::Layer03);
+	AddIgnoredPhysicsLayers(PhysicsLayer::Layer04);
 }

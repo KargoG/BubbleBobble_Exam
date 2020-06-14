@@ -89,22 +89,24 @@ void RigidbodyComponent::PhysicsUpdate()
 
 	// Velocity handling
 	if (int(m_TouchFlags) & int(TouchFlags::Left))
-		m_Velocity.x = max(0, m_Velocity.x);
+		m_Velocity.x = max(0.f, m_Velocity.x);
 
 	if (int(m_TouchFlags) & int(TouchFlags::Right))
-		m_Velocity.x = min(0, m_Velocity.x);
+		m_Velocity.x = min(0.f, m_Velocity.x);
 
 	if (int(m_TouchFlags) & int(TouchFlags::Bottom))
-		m_Velocity.y = max(0, m_Velocity.y);
+		m_Velocity.y = max(0.f, m_Velocity.y);
 
 	if (int(m_TouchFlags) & int(TouchFlags::Top))
-		m_Velocity.y = min(0, m_Velocity.y);
+		m_Velocity.y = min(0.f, m_Velocity.y);
+
+	m_pPlayerTransform->SetPosition( adjustedPosition.x, adjustedPosition.y );
 	
 	// Movement
 	float newXPos{ playerPosition.x + m_Velocity.x * dt };
 	float newYPos{ playerPosition.y + m_Velocity.y * dt };
+	m_pPlayerTransform->SetPosition(newXPos, newYPos);
 	
-	m_pPlayerTransform->SetPosition( (adjustedPosition.x > 0) ? adjustedPosition.x : newXPos, (adjustedPosition.y > 0) ? adjustedPosition.y : newYPos);
 }
 
 void RigidbodyComponent::Render() const

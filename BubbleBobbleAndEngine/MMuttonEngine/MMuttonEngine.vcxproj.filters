@@ -81,7 +81,18 @@
     <ClInclude Include="BinaryReader.h">
       <Filter>Helper</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -127,15 +138,20 @@
     <ClCompile Include="RigidbodyComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="GameData.cpp">
-      <Filter>Core\Singletons</Filter>
-    </ClCompile>
     <ClCompile Include="InputComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="BinaryReader.cpp">
       <Filter>Helper</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMode.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Subject.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

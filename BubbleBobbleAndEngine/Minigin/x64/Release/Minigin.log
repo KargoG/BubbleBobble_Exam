@@ -1,23 +1,24 @@
 ﻿  MiniginPCH.cpp
-  BaseComponent.cpp
-  Font.cpp
+  AIControllerComponent.cpp
+  AnimationStates.cpp
+  BubbleBobbleAnimationComponent.cpp
+  BulletBehaviourComponent.cpp
+  ControllerComponent.cpp
+  CoopMode.cpp
+  Enemy.cpp
   FPS.cpp
-  InputManager.cpp
+  LevelLoader.cpp
   Main.cpp
   Minigin.cpp
-  Renderer.cpp
-  ResourceManager.cpp
-  Scene.cpp
-  SceneManager.cpp
-  TextComponent.cpp
-  Texture2D.cpp
-  TextureRendererComponent.cpp
-  Time.cpp
-  Transform.cpp
+  Player.cpp
+  PlayerControllerComponent.cpp
+  SingleMode.cpp
+  VersusMode.cpp
      Creating library D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.lib and object D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.exp
   Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 654 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  208 of 2474 functions ( 8.4%) were compiled, the rest were copied from previous compilation.
+    69 functions were new in current compilation
+    176 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Minigin.vcxproj -> D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.exe
   D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2\lib\x64\SDL2.dll

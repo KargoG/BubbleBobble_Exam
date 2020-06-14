@@ -8,8 +8,5 @@ class Enemy :
 {
 public:
 	Enemy();
-
-private:
-	AIControllerComponent* m_pAIController{ nullptr };
 };
 

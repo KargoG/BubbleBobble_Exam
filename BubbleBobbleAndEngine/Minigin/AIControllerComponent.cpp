@@ -1,49 +1,267 @@
 #include "MiniginPCH.h"
 #include "AIControllerComponent.h"
+#include "Time.h"
+#include "RigidbodyComponent.h"
+#include "GameObject.h"
+#include "Scene.h"
+#include "PlayerControllerComponent.h"
+#include "TransformComponent.h"
+#include "ResourceManager.h"
+#include "BulletBehaviourComponent.h"
+
+AIControllerComponent::AIControllerComponent()
+{
+	m_pCurrentState = new WalkingState();
+}
+
+AIControllerComponent::~AIControllerComponent()
+{
+	delete m_pCurrentState;
+}
 
 void AIControllerComponent::Update()
 {
-	m_pCurrentState->Update();
+	ControllerComponent::Update();
+
+	AIState* newState = m_pCurrentState->Update(this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
 }
 
 void AIControllerComponent::PhysicsUpdate()
 {
-	m_pCurrentState->PhysicsUpdate();
+	AIState* newState = m_pCurrentState->PhysicsUpdate(this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
 }
 
 BaseComponent * AIControllerComponent::Clone() const
 {
-	// TODO fill clone method
-	return nullptr;
+	AIControllerComponent *cc{ new AIControllerComponent{} };
+
+	delete cc->m_pCurrentState;
+	
+	cc->m_pCurrentState = m_pCurrentState->Clone();
+	cc->m_LookingRight = m_LookingRight;
+	cc->m_WalkSpeed = m_WalkSpeed;
+	
+	return cc;
 }
 
-void AIControllerComponent::LoadFromJson( const nlohmann::json & )
+void AIControllerComponent::LoadFromJson( const nlohmann::json &json )
 {
-	// TODO load from json
+	delete m_pCurrentState;
+	m_pCurrentState = new WalkingState{};
+	m_WalkSpeed = json.at("WalkSpeed").get<float>();
+}
+
+void AIControllerComponent::Shoot()
+{
+	GameObject* bubble{ ResourceManager::GetInstance().SpawnPrototype("Bullet") };
+	m_pGameObject->GetScene()->Add(bubble);
+
+	glm::vec3 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
+
+	bubble->GetComponent<TransformComponent>()->SetPosition(pos);
+	bubble->GetComponent<BulletBehaviourComponent>()->SetMovingRight(m_LookingRight);
 }
 
 void AIControllerComponent::Jump()
 {
-	m_pCurrentState->Jump();
+	AIState* newState = m_pCurrentState->Jump(this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
 }
 
+void AIControllerComponent::TakeDamage()
+{
+	AIState* newState = m_pCurrentState->TakeDamage(this);
 
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
+}
 
+void AIControllerComponent::Die()
+{
+	m_AISubject.Notify(this, BB_ENEMY_DIED);
+	m_pGameObject->GetScene()->Remove(m_pGameObject);
+	// TODO spawn points?
+}
 
+void AIControllerComponent::OnCollision( const BoxColliderComponent *other )
+{
+	AIState* newState = m_pCurrentState->OnCollision(other, this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
+}
+
+GameObject* AIControllerComponent::GetTargetedPlayer() const
+{
+	PlayerControllerComponent *pPlayer = m_pGameObject->GetScene()->GetObjectWithComponent<PlayerControllerComponent>();
+	
+	return pPlayer->GetGameObject();
+}
 
 // States
 
-void WalkingState::Update()
+AIState* WalkingState::Update(AIControllerComponent* controller)
 {
+	if (controller->GetTargetedPlayer()->GetComponent<TransformComponent>()->GetPosition().y > controller->GetGameObject()->GetComponent<TransformComponent>()->GetPosition().y)
+	{
+		controller->Jump();
+		return nullptr;
+	}
 	
+	return nullptr;
 }
 
-void WalkingState::PhysicsUpdate()
+AIState * WalkingState::PhysicsUpdate( AIControllerComponent * controller)
 {
+	TouchFlags flags = controller->GetRigidbody()->GetTouchFlags();
+
+	if (controller->IsLookingRight())
+		controller->SetLookingRight((int(flags) & int(TouchFlags::Right)) == 0);
+	else
+		controller->SetLookingRight((int(flags) & int(TouchFlags::Left)) != 0);
+
+	if ((int(flags) & int(TouchFlags::Bottom)) == 0)
+		return new FallingState{};
+
 	
+	if (controller->IsLookingRight())
+		controller->GetRigidbody()->Move(controller->GetWalkSpeed() * Time::GetInstance().GetDeltaTime(), 0);
+	else
+		controller->GetRigidbody()->Move(-controller->GetWalkSpeed() * Time::GetInstance().GetDeltaTime(), 0);
+
+	return nullptr;
 }
 
-void WalkingState::Jump()
+AIState* WalkingState::Jump(AIControllerComponent*)
 {
+	return new JumpingUpState();
+}
+
+AIState * WalkingState::TakeDamage( AIControllerComponent * )
+{
+	return new BubbleState();
+}
+
+AIState * WalkingState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+{
+	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	{
+		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
+	}
+
+	return nullptr;
+}
+
+AIState * FallingState::PhysicsUpdate( AIControllerComponent * controller)
+{
+	TouchFlags flags = controller->GetRigidbody()->GetTouchFlags();
+
+	if ((int(flags) & int(TouchFlags::Bottom)) != 0)
+		return new WalkingState{};
+
+	return nullptr;
+}
+
+AIState * FallingState::TakeDamage( AIControllerComponent * )
+{
+	return new BubbleState();
+}
+
+AIState * FallingState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+{
+	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	{
+		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
+	}
+
+	return nullptr;
+}
+
+AIState* JumpingUpState::PhysicsUpdate(AIControllerComponent* controller)
+{
+	controller->GetRigidbody()->AddVelocity(0, 10);
+	return new WalkingState{};
+}
+
+AIState * JumpingUpState::TakeDamage( AIControllerComponent * )
+{
+	return new BubbleState();
+}
+
+AIState * JumpingUpState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+{
+	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	{
+		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
+	}
+
+	return nullptr;
+}
+
+AIState* JumpingForwardState::PhysicsUpdate( AIControllerComponent *controller )
+{
+	controller->GetRigidbody()->AddVelocity(50, 10);
+	return new WalkingState{};
+}
+
+AIState * JumpingForwardState::TakeDamage( AIControllerComponent * )
+{
+	return new BubbleState();
+}
+
+AIState * JumpingForwardState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+{
+	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	{
+		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
+	}
+
+	return nullptr;
+}
+
+AIState * BubbleState::Update( AIControllerComponent *controller )
+{
+	m_AccumulatedTime += Time::GetInstance().GetDeltaTime();
 	
+	if (m_AccumulatedTime >= m_TimeInBubble)
+	{
+		controller->SetInBubble(false);
+		return new WalkingState();
+	}
+	
+	controller->SetInBubble(true);
+	return nullptr;
+}
+
+AIState * BubbleState::OnCollision( const BoxColliderComponent *other, AIControllerComponent *controller )
+{
+	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	{
+		controller->Die();
+	}
+
+	return nullptr;
 }
