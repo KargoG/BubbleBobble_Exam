@@ -194,6 +194,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AIControllerComponent.h" />
+    <ClInclude Include="BulletBehaviourComponent.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FPS.h" />
     <ClInclude Include="LevelLoader.h" />
@@ -201,9 +203,10 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerControllerComponent.h" />
-    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AIControllerComponent.cpp" />
+    <ClCompile Include="BulletBehaviourComponent.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FPS.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
@@ -218,7 +221,6 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     </ClCompile>
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerControllerComponent.cpp" />
-    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,6 +12,12 @@
 #include "FPS.h"
 #include "GameData.h"
 #include "PlayerControllerComponent.h"
+#include "Scene.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "TransformComponent.h"
+#include "BulletBehaviourComponent.h"
+#include "AIControllerComponent.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -50,10 +56,12 @@ void Minigin::LoadGame() const
 	BaseComponent::RegisterEngineComponents();
 	BaseComponent::RegisterComponent("FPS", new FPS{});
 	BaseComponent::RegisterComponent("PlayerControllerComponent", new PlayerControllerComponent{});
+	BaseComponent::RegisterComponent("BulletBehaviourComponent", new BulletBehaviourComponent{});
+	//BaseComponent::RegisterComponent("AIControllerComponent", new AIControllerComponent{});
 
 	// Load Levels
 	LevelLoader::GetInstance().Init();
-	LevelLoader::GetInstance().LoadLevel(25);
+	LevelLoader::GetInstance().LoadLevel(4);
 	
 	//auto scene = SceneManager::GetInstance().CreateScene("Demo");
 
@@ -84,7 +92,16 @@ void Minigin::LoadGame() const
 	//go->AddComponent(tc);
 	//go->AddComponent(new FPS());
 	//scene->Add(go);
+
+	GameObject *player{ new Player{} };
+	GameObject *enemy{ new Enemy{} };
+
+	player->GetComponent<TransformComponent>()->SetPosition(20, 15, 0);
+	enemy->GetComponent<TransformComponent>()->SetPosition(220, 15, 0);
+	enemy->GetComponent<PlayerControllerComponent>()->SetPlayerNumber(1);
 	
+	SceneManager::GetInstance().GetActiveScene()->Add(player);
+	SceneManager::GetInstance().GetActiveScene()->Add(enemy);
 }
 
 void Minigin::Cleanup()
@@ -135,6 +152,7 @@ void Minigin::Run()
 			doContinue = !Minigin::CloseWindow();
 			
 			sceneManager.Update();
+			sceneManager.Swap();
 			renderer.Render();
 			
 			lastTime = currentTime;

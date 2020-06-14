@@ -4,7 +4,6 @@
 #include <fstream>
 #include "Scene.h"
 #include "GameObject.h"
-#include "Wall.h"
 #pragma warning(push)
 #pragma warning (disable:4201)
 #include <glm/vec3.hpp>
@@ -13,6 +12,7 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include <BinaryReader.h>
+#include "GameData.h"
 
 void LevelLoader::Init()
 {
@@ -56,6 +56,11 @@ void LevelLoader::Init()
 
 			pos.y -= 8; // TODO remove literal
 		}
+
+		GameObject* levelCollider{ new GameObject{} };
+		levelCollider->AddComponent(new BoxColliderComponent{ float(GameData::GetInstance().GetWindowWidth()), 20 });
+		levelCollider->GetComponent<TransformComponent>()->SetPosition(0, float(GameData::GetInstance().GetWindowHeight()), 0);
+		level->Add(levelCollider);
 		
 		levelNumber++;
 	}
@@ -64,7 +69,9 @@ void LevelLoader::Init()
 	reader.CloseReader();
 }
 
-void LevelLoader::LoadLevel( int level )
+void LevelLoader::LoadLevel( int level, GameMode gameMode )
 {
 	SceneManager::GetInstance().SetActiveScene("Level" + std::to_string(level));
+
+	// TODO Spawn enemies in Single and duo game mode
 }

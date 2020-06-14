@@ -11,11 +11,11 @@
     <Filter Include="GameObjects">
       <UniqueIdentifier>{49ccbac3-e5b6-4629-b8d4-a61732216f7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{2dd1121b-c66d-4c14-ab0b-e1b0170b474d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{e44d7a8c-3008-4ecd-b408-528d967944b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{2dd1121b-c66d-4c14-ab0b-e1b0170b474d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -25,16 +25,27 @@
     <ClInclude Include="MiniginPCH.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="Wall.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="FPS.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerControllerComponent.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="PlayerControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="AIControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletBehaviourComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelLoader.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -46,15 +57,26 @@
     <ClCompile Include="MiniginPCH.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="LevelLoader.cpp" />
-    <ClCompile Include="Wall.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="FPS.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerControllerComponent.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="PlayerControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="AIControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletBehaviourComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelLoader.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

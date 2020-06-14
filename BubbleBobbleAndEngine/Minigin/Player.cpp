@@ -24,4 +24,7 @@ Player::Player()
 	
 	PlayerControllerComponent* controller = new PlayerControllerComponent{};
 	AddComponent(controller);
+	
+	SetPhysicsLayer(PhysicsLayer::Layer01);
+	AddIgnoredPhysicsLayers(PhysicsLayer::Layer01);
 }
