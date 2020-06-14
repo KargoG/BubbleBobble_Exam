@@ -1,8 +1,11 @@
 {
+  "IgnoredLayers":{ },
+  "PhysicsLayer": 10,
   "BoxColliderComponent":
   {
     "Width": 8,
-    "Height": 8
+    "Height": 8,
+    "UseOneWay": true
   },
   "TextureRendererComponent":
   {
