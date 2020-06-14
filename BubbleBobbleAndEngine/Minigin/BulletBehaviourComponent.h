@@ -10,6 +10,7 @@ public:
 	virtual void Start() override;
 	virtual void Update() override {}
 	virtual void PhysicsUpdate() override;
+	virtual void OnCollision(const BoxColliderComponent* other) override;
 	virtual void Render() const override {};
 	virtual BaseComponent* Clone() const override;
 	virtual void LoadFromJson(const nlohmann::json& json) override;

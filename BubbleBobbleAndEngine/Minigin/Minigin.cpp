@@ -28,7 +28,6 @@ void Minigin::Initialize()
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
-	GameData::GetInstance().Init(640, 480);
 
 	m_Window = SDL_CreateWindow(
 		"Programming 4 assignment",
@@ -96,8 +95,13 @@ void Minigin::LoadGame() const
 	GameObject *player{ new Player{} };
 	GameObject *enemy{ new Enemy{} };
 
-	player->GetComponent<TransformComponent>()->SetPosition(20, 15, 0);
-	enemy->GetComponent<TransformComponent>()->SetPosition(220, 15, 0);
+	player->GetComponent<TransformComponent>()->SetPosition(40, 30, 0);
+	player->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
+	
+	enemy->GetComponent<TransformComponent>()->SetPosition(440, 30, 0);
+	enemy->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
+
+	
 	enemy->GetComponent<PlayerControllerComponent>()->SetPlayerNumber(1);
 	
 	SceneManager::GetInstance().GetActiveScene()->Add(player);

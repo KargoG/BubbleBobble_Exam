@@ -5,10 +5,13 @@
 #include "TransformComponent.h"
 #include "RigidbodyComponent.h"
 #include "PlayerControllerComponent.h"
+#include "AnimationComponent.h"
+#include "GameData.h"
+#include "AnimationStates.h"
 
 Player::Player()
 {
-	AddComponent(new BoxColliderComponent(8.f, 8.f));
+	AddComponent(new BoxColliderComponent(float(GameData::GetInstance().GetSpriteWidth()), float(GameData::GetInstance().GetSpriteHeight())));
 
 	TextureRendererComponent *texComp{ new TextureRendererComponent() }; 
 	texComp->SetTexture("Textures/Sprites0.png");
@@ -24,6 +27,8 @@ Player::Player()
 	
 	PlayerControllerComponent* controller = new PlayerControllerComponent{};
 	AddComponent(controller);
+
+	AddComponent(new AnimationComponent{new PlayerWalkingRight{}});
 	
 	SetPhysicsLayer(PhysicsLayer::Layer01);
 	AddIgnoredPhysicsLayers(PhysicsLayer::Layer01);

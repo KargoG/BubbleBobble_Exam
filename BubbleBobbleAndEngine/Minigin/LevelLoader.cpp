@@ -24,17 +24,17 @@ void LevelLoader::Init()
 	int levelNumber{0};
 	for( Scene *& level : m_Levels )
 	{
-		glm::vec3 pos{0, 8 * 24, 0}; // TODO turn literals into variables u bloke
+		glm::vec3 pos{0, GameData::GetInstance().GetSpriteHeight() * (GameData::GetInstance().GetLevelHeight() - 1) * GameData::GetInstance().GetSpriteScale(), 0};
 		
 		level = SceneManager::GetInstance().CreateScene("Level" + std::to_string(levelNumber));
-		for (int levelLine = 0; levelLine < 25; ++levelLine) // TODO turn 25 into literal (maybe in Game information???)
+		for (int levelLine = 0; levelLine < GameData::GetInstance().GetLevelHeight(); ++levelLine)
 		{
 			pos.x = 0; // reset X at the beginning of a line
 			
 			// Read line
 			char line{};
 			
-			for( int byte = 0; byte < 4; ++byte)
+			for( int byte = 0; byte < GameData::GetInstance().GetLevelWidth() / 8; ++byte)
 			{
 				reader.ReadVarFromFile(line); // every lines has 4 bytes for 32 bits (bitmask)
 				int mask{ 0b10000000 }; // 0b1000 0000
@@ -45,20 +45,23 @@ void LevelLoader::Init()
 					{
 						GameObject* newBlock{ ResourceManager::GetInstance().SpawnPrototype("BaseWall") };// TODO change Wall type based on level
 
-						newBlock->GetComponent<TransformComponent>()->SetPosition(pos);
+						TransformComponent* blockTransform{ newBlock->GetComponent<TransformComponent>() };
+						blockTransform->SetPosition(pos);
+						blockTransform->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 						level->Add(newBlock);
 					}
 					
 					mask >>= 1; // bit shift bitmask
-					pos.x += 8; // TODO remove literal
+					pos.x += GameData::GetInstance().GetSpriteWidth() * GameData::GetInstance().GetSpriteScale();
 				}
 			}
 
-			pos.y -= 8; // TODO remove literal
+			pos.y -= GameData::GetInstance().GetSpriteHeight() * GameData::GetInstance().GetSpriteScale();
 		}
 
 		GameObject* levelCollider{ new GameObject{} };
 		levelCollider->AddComponent(new BoxColliderComponent{ float(GameData::GetInstance().GetWindowWidth()), 20 });
+		
 		levelCollider->GetComponent<TransformComponent>()->SetPosition(0, float(GameData::GetInstance().GetWindowHeight()), 0);
 		level->Add(levelCollider);
 		
@@ -69,7 +72,7 @@ void LevelLoader::Init()
 	reader.CloseReader();
 }
 
-void LevelLoader::LoadLevel( int level, GameMode gameMode )
+void LevelLoader::LoadLevel( int level, GameMode )
 {
 	SceneManager::GetInstance().SetActiveScene("Level" + std::to_string(level));
 

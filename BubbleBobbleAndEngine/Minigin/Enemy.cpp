@@ -6,14 +6,16 @@
 #include "PlayerControllerComponent.h"
 #include "TextureRendererComponent.h"
 #include "BoxColliderComponent.h"
+#include "GameData.h"
+#include "AnimationStates.h"
 
 Enemy::Enemy()
 {
-	AddComponent(new BoxColliderComponent(8.f, 8.f));
+	AddComponent(new BoxColliderComponent(float(GameData::GetInstance().GetSpriteWidth()), float(GameData::GetInstance().GetSpriteHeight())));
 
 	TextureRendererComponent* texComp{ new TextureRendererComponent() };
 	texComp->SetTexture("Textures/Sprites0.png");
-	texComp->SetRenderDimensions(0, 14 * 8, 8, 8); // TODO make this work based on texture number
+	texComp->SetRenderDimensions(0, 14.f * GameData::GetInstance().GetSpriteHeight(), float(GameData::GetInstance().GetSpriteWidth()), float(GameData::GetInstance().GetSpriteHeight())); // TODO make this work based on texture number
 
 	AddComponent(texComp);
 
@@ -26,6 +28,8 @@ Enemy::Enemy()
 	PlayerControllerComponent* controller = new PlayerControllerComponent{};
 	AddComponent(controller);
 
+	AddComponent(new AnimationComponent{ new MaitaWalkingRight{} });
+	
 	SetPhysicsLayer(PhysicsLayer::Layer03);
 	AddIgnoredPhysicsLayers(PhysicsLayer::Layer03);
 }

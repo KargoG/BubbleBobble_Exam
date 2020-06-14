@@ -39,6 +39,12 @@ void PlayerControllerComponent::Update()
 		m_LookingRight = xInput > 0;
 }
 
+void PlayerControllerComponent::TakeDamage()
+{
+	m_PlayerLifes--;
+	// TODO
+}
+
 BaseComponent * PlayerControllerComponent::Clone() const
 {
 	PlayerControllerComponent *pcc{ new PlayerControllerComponent{} };

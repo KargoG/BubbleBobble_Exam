@@ -195,7 +195,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AIControllerComponent.h" />
+    <ClInclude Include="AnimationStates.h" />
     <ClInclude Include="BulletBehaviourComponent.h" />
+    <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FPS.h" />
     <ClInclude Include="LevelLoader.h" />
@@ -206,7 +208,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIControllerComponent.cpp" />
+    <ClCompile Include="AnimationStates.cpp" />
     <ClCompile Include="BulletBehaviourComponent.cpp" />
+    <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FPS.cpp" />
     <ClCompile Include="LevelLoader.cpp" />

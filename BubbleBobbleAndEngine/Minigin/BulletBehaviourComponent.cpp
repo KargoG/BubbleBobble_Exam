@@ -3,6 +3,9 @@
 #include "GameObject.h"
 #include "RigidbodyComponent.h"
 #include "Time.h"
+#include "BoxColliderComponent.h"
+#include "PlayerControllerComponent.h"
+#include "Scene.h"
 
 void BulletBehaviourComponent::Start()
 {
@@ -21,6 +24,26 @@ void BulletBehaviourComponent::PhysicsUpdate()
 		m_pRB->Move((m_MovingRight ? m_SpeedHorizontal : -m_SpeedHorizontal) * Time::GetInstance().GetPhysicsDeltaTime(), 0);
 	else
 		m_pRB->Move(0, m_SpeedVertical * Time::GetInstance().GetPhysicsDeltaTime());
+}
+
+void BulletBehaviourComponent::OnCollision(const BoxColliderComponent* other)
+{
+	if (GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01) // Bubble
+	{
+		if(other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer03)
+		{
+			other->GetGameObject()->GetComponent<PlayerControllerComponent>()->TakeDamage(); // TODO what if enemy is not controlled by player?
+			m_pGameObject->GetScene()->Remove(m_pGameObject);
+		}
+	}
+	else // Bullet
+	{
+		if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer03)
+		{
+			other->GetGameObject()->GetComponent<PlayerControllerComponent>()->TakeDamage(); // TODO what if enemy is not controlled by player?
+			m_pGameObject->GetScene()->Remove(m_pGameObject);
+		}
+	}
 }
 
 BaseComponent * BulletBehaviourComponent::Clone() const

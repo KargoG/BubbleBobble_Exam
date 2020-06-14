@@ -46,6 +46,8 @@
     <ClInclude Include="LevelLoader.h">
       <Filter>Helper</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationStates.h" />
+    <ClInclude Include="ControllerComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -78,5 +80,7 @@
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Helper</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationStates.cpp" />
+    <ClCompile Include="ControllerComponent.cpp" />
   </ItemGroup>
 </Project>
