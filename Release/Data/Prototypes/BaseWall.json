@@ -1,0 +1,18 @@
+{
+  "IgnoredLayers":{ },
+  "PhysicsLayer": 10,
+  "BoxColliderComponent":
+  {
+    "Width": 16,
+    "Height": 16,
+    "UseOneWay": true
+  },
+  "TextureRendererComponent":
+  {
+    "Texture": "Textures/LevelBlocks.png",
+    "X": 0,
+    "Y": 0,
+    "Width": 16,
+    "Height": 16
+  }
+}

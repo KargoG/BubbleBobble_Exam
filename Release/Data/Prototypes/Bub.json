@@ -1,0 +1,31 @@
+{
+  "IgnoredLayers":{ "1":1, "2":2 },
+  "PhysicsLayer": 1,
+  "BoxColliderComponent":
+  {
+    "Width": 16,
+    "Height": 16,
+    "UseOneWay": false
+  },
+  "RigidbodyComponent": {
+    "ApplyGravity": true
+  },
+  "InputComponent":{
+    "Controller": 0
+  },
+  "TextureRendererComponent":
+  {
+    "Texture": "Textures/Sprites0.png",
+    "X": 0,
+    "Y": 0,
+    "Width": 16,
+    "Height": 16
+  },
+  "PlayerControllerComponent": {
+    "WalkSpeed": 50.0,
+    "PlayerNumber": 0
+  },
+  "BubbleBobbleAnimationComponent": {
+    "State": "PlayerWalkingRight"
+  }
+}
