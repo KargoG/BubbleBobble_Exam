@@ -32,10 +32,23 @@ GameObject * GameObject::CreateFromJson( const nlohmann::json &json )
 {
 	UNREFERENCED_PARAMETER(json);
 	GameObject *newGameObject{ new GameObject{} };
+
+	newGameObject->m_Layer = PhysicsLayer(1 << json.at("PhysicsLayer").get<int>());
 	
 	for( auto it = json.items().begin(); it != json.items().end(); ++it )
 	{
-		newGameObject->AddComponent(BaseComponent::CreateFromJson(it.key(), it.value()));
+		if(it.key() == "IgnoredLayers")
+		{
+			nlohmann::json ignoredLayers = it.value();
+			for (auto layerIt = ignoredLayers.items().begin(); layerIt != ignoredLayers.items().end(); ++layerIt)
+			{
+				int layer{ layerIt.value().get<int>() };
+				newGameObject->AddIgnoredPhysicsLayers(PhysicsLayer(1 << layer));
+			}
+			continue;
+		}
+		if(it.value().is_structured())
+			newGameObject->AddComponent(BaseComponent::CreateFromJson(it.key(), it.value()));
 	}
 	
 	return newGameObject;
@@ -71,12 +84,29 @@ void GameObject::Render() const
 	}
 }
 
+void GameObject::Swap()
+{
+	for (BaseComponent* pComponent : m_pComponents)
+	{
+		pComponent->Swap();
+	}
+}
+
 GameObject* GameObject::Clone() const
 {
 	GameObject* clone{ new GameObject{} };
 
+	clone->m_Layer = m_Layer;
+	clone->m_IgnoredLayers = m_IgnoredLayers;
+	
+	bool skippedTransform{false};
 	for( BaseComponent * const pComponent : m_pComponents )
 	{
+		if (!skippedTransform)
+		{
+			skippedTransform = true;
+			continue;
+		}
 		clone->AddComponent( pComponent->Clone() );
 	}
 

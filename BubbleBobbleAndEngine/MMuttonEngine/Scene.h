@@ -14,6 +14,7 @@ public:
 	void Update();
 	void PhysicsUpdate();
 	void Render() const;
+	void Swap();
 
 	~Scene();
 	
@@ -34,6 +35,8 @@ private:
 
 	std::string m_Name;
 	std::vector <GameObject*> m_Objects{};
+	std::vector <GameObject*> m_ObjectsToAdd{};
+	std::vector <GameObject*> m_ObjectsToRemove{};
 	std::vector <BoxColliderComponent*> m_Collider{};
 
 	static unsigned int m_IdCounter;

@@ -11,9 +11,13 @@
 
 void RigidbodyComponent::Start()
 {
+	m_pPlayerTransform = m_pGameObject->GetComponent<TransformComponent>();
+	
 	BoxColliderComponent* rbCollider{ m_pGameObject->GetComponent<BoxColliderComponent>() };
-	m_BoxColliders.push_back(rbCollider);
-	m_pGameObject->GetScene()->RemoveCollider(rbCollider);
+	if (!rbCollider)
+		throw std::exception("The Rigidbody needs a Collider to get instantiated!\n");
+	
+	m_pBoxCollider = rbCollider;
 }
 
 void RigidbodyComponent::Update()
@@ -23,74 +27,80 @@ void RigidbodyComponent::Update()
 void RigidbodyComponent::PhysicsUpdate()
 {
 	m_TouchFlags = TouchFlags::None;
-	TransformComponent* pPlayerTransform{ m_pGameObject->GetComponent<TransformComponent>() };
-	const glm::vec2& playerPosition{ pPlayerTransform->GetPosition() };
+	const glm::vec2& playerPosition{ m_pPlayerTransform->GetPosition() };
 	
 	
 	const std::vector<BoxColliderComponent*>& levelCollider{ m_pGameObject->GetScene()->GetCollider() };
 
 	glm::vec2 adjustedPosition{-1, -1};
 	
-	for( BoxColliderComponent * pPlayerCollider : m_BoxColliders)
+	
+	glm::vec2 playerDimensions{ m_pBoxCollider->GetDimensions() };
+
+	for( BoxColliderComponent * const pCollider : levelCollider)
 	{
-		glm::vec2 playerDimensions{ pPlayerCollider->GetDimensions() };
+		if (m_pBoxCollider == pCollider) // avoid selfcollision
+			continue;
+		if (int(m_pGameObject->GetIgnoredPhysicsLayers()) & int(pCollider->GetGameObject()->GetPhysicsLayer())) // avoid collision with ignored layers
+			continue;
+		
+		int newFlags{ int(m_pBoxCollider->CalculateCollisions(pCollider)) };
+		m_TouchFlags = TouchFlags(int(m_TouchFlags) | newFlags);
 
-		for( BoxColliderComponent * const pCollider : levelCollider)
+
+		if (newFlags == int(TouchFlags::None))
+			continue;
+
+		glm::vec2 colliderDimensions{ pCollider->GetDimensions() };
+		const glm::vec2& colliderPosition{ pCollider->GetGameObject()->GetComponent<TransformComponent>()->GetPosition() };
+		
+		if(newFlags & int(TouchFlags::Left))
 		{
-			int newFlags{ int(pPlayerCollider->CalculateCollisions(pCollider)) };
-			m_TouchFlags = TouchFlags(int(m_TouchFlags) | newFlags);
-
-
-			if (newFlags == int(TouchFlags::None))
-				continue;
-
-			glm::vec2 colliderDimensions{ pCollider->GetDimensions() };
-			const glm::vec2& colliderPosition{ pCollider->GetGameObject()->GetComponent<TransformComponent>()->GetPosition() };
-			
-			if(newFlags & int(TouchFlags::Left))
-			{
-				adjustedPosition.x = colliderPosition.x + colliderDimensions.x;
-			}
-			if(newFlags & int(TouchFlags::Right))
-			{
-				adjustedPosition.x = colliderPosition.x - playerDimensions.x;
-			}
-			if(newFlags & int(TouchFlags::Bottom))
-			{
-				adjustedPosition.y = colliderPosition.y + colliderDimensions.y;
-			}
-			if(newFlags & int(TouchFlags::Top))
-			{
-				adjustedPosition.y = colliderPosition.y - playerDimensions.y;
-			}
-			
+			adjustedPosition.x = colliderPosition.x + colliderDimensions.x;
 		}
+		if(newFlags & int(TouchFlags::Right))
+		{
+			adjustedPosition.x = colliderPosition.x - playerDimensions.x;
+		}
+		if(newFlags & int(TouchFlags::Bottom))
+		{
+			adjustedPosition.y = colliderPosition.y + colliderDimensions.y;
+		}
+		if(newFlags & int(TouchFlags::Top))
+		{
+			adjustedPosition.y = colliderPosition.y - playerDimensions.y;
+		}
+		
 	}
+	
 
 	float dt{ Time::GetInstance().GetPhysicsDeltaTime() };
 
 
-	if(int(m_TouchFlags) & int(TouchFlags::Left))
-		m_Velocity.x = max(0, m_Velocity.x);
 	
-	if(int(m_TouchFlags) & int(TouchFlags::Right))
-		m_Velocity.x = min(0, m_Velocity.x);
-
-	if(int(m_TouchFlags) & int(TouchFlags::Bottom))
-		m_Velocity.y = max(0, m_Velocity.y);
-
-	if(int(m_TouchFlags) & int(TouchFlags::Top))
-		m_Velocity.y = min(0, m_Velocity.y);
-
-	
-	
-	if((int(m_TouchFlags) & int(TouchFlags::Bottom)) == 0)
+	// Gravity
+	if(m_ApplyGravity && (int(m_TouchFlags) & int(TouchFlags::Bottom)) == 0)
 		m_Velocity.y += -98.1f * dt;
 
+
+	// Velocity handling
+	if (int(m_TouchFlags) & int(TouchFlags::Left))
+		m_Velocity.x = max(0, m_Velocity.x);
+
+	if (int(m_TouchFlags) & int(TouchFlags::Right))
+		m_Velocity.x = min(0, m_Velocity.x);
+
+	if (int(m_TouchFlags) & int(TouchFlags::Bottom))
+		m_Velocity.y = max(0, m_Velocity.y);
+
+	if (int(m_TouchFlags) & int(TouchFlags::Top))
+		m_Velocity.y = min(0, m_Velocity.y);
+	
+	// Movement
 	float newXPos{ playerPosition.x + m_Velocity.x * dt };
 	float newYPos{ playerPosition.y + m_Velocity.y * dt };
 	
-	pPlayerTransform->SetPosition( (adjustedPosition.x > 0) ? adjustedPosition.x : newXPos, (adjustedPosition.y > 0) ? adjustedPosition.y : newYPos);
+	m_pPlayerTransform->SetPosition( (adjustedPosition.x > 0) ? adjustedPosition.x : newXPos, (adjustedPosition.y > 0) ? adjustedPosition.y : newYPos);
 }
 
 void RigidbodyComponent::Render() const
@@ -131,9 +141,28 @@ void RigidbodyComponent::Render() const
 #endif
 }
 
+void RigidbodyComponent::SetCollider( BoxColliderComponent *pBoxCollider )
+{
+	if (m_pBoxCollider)
+		delete m_pBoxCollider;
+
+	m_pBoxCollider = pBoxCollider;
+}
+
 BaseComponent * RigidbodyComponent::Clone() const
 {
 	RigidbodyComponent* rb{ new RigidbodyComponent{} };
 	rb->m_Velocity = m_Velocity;
+	rb->m_ApplyGravity = m_ApplyGravity;
 	return rb;
+}
+
+void RigidbodyComponent::LoadFromJson( const nlohmann::json &json )
+{
+	m_ApplyGravity = json.at("ApplyGravity").get<bool>();
+}
+
+void RigidbodyComponent::Move( float x, float y )
+{
+	m_pPlayerTransform->SetPosition(m_pPlayerTransform->GetPosition() + glm::vec3{ x , y, 0});
 }

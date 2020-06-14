@@ -12,12 +12,7 @@ BoxColliderComponent::BoxColliderComponent(float width, float height) : m_Dimens
 
 void BoxColliderComponent::Start()
 {
-	RigidbodyComponent *rb = m_pGameObject->GetComponent<RigidbodyComponent>();
-	
-	if (rb)
-		rb->AddCollider(this);
-	else
-		m_pGameObject->GetScene()->AddCollider(this);
+	m_pGameObject->GetScene()->AddCollider(this);
 }
 
 void BoxColliderComponent::Render() const
@@ -76,7 +71,7 @@ TouchFlags BoxColliderComponent::CalculateCollisions(const BoxColliderComponent 
 			//m_Velocity.y = max(0, m_Velocity.y);
 		}
 	}
-	if (m_UseOneWay)
+	if (pOtherCollider->m_UseOneWay)
 		return flags;
 	
 	if (position.y + dimensions.y > colliderPosition.y && position.y + dimensions.y < colliderPosition.y + colliderDimensions.y) // Top
@@ -94,11 +89,14 @@ TouchFlags BoxColliderComponent::CalculateCollisions(const BoxColliderComponent 
 
 BaseComponent * BoxColliderComponent::Clone() const
 {
-	return new BoxColliderComponent{m_Dimensions.x, m_Dimensions.y};
+	BoxColliderComponent* bcc = new BoxColliderComponent{ m_Dimensions.x, m_Dimensions.y };
+	bcc->m_UseOneWay = m_UseOneWay;
+	return bcc;
 }
 
 void BoxColliderComponent::LoadFromJson( const nlohmann::json &json )
 {
 	m_Dimensions.x = json.at("Width").get<float>();
 	m_Dimensions.y = json.at("Height").get<float>();
+	m_UseOneWay = json.at("UseOneWay").get<bool>();
 }

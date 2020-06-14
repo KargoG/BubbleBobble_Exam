@@ -7,13 +7,14 @@ class ControllerComponent abstract :
 {
 public:
 	void Start() override;
-	void Update() override = 0;
+	void Update() override;
 	void PhysicsUpdate() override = 0;
 	void Render() const override = 0;
 	BaseComponent * Clone() const override = 0;
 	void LoadFromJson( const nlohmann::json &json ) override = 0;
 
 	virtual void Jump() = 0;
+	virtual void Shoot() = 0;
 	
 protected:
 	RigidbodyComponent* m_pRB{ nullptr };

@@ -88,4 +88,6 @@ private:
 	Command* m_pRightThumbstick{ nullptr };
 	Command* m_pLeftShoulder{ nullptr };
 	Command* m_pRightShoulder{ nullptr };
+
+	float m_DeadZone{ 0.1f };
 };

@@ -30,12 +30,18 @@ void Scene::Add(GameObject* object)
 	if (object->GetScene())
 		throw std::exception{"A GameObject can only be part of 1 Scene!"};
 	
-	m_Objects.push_back(object);
-	object->SetScene(this);
+	m_ObjectsToAdd.push_back(object);
 }
 
 void Scene::Start()
 {
+	for (GameObject* objectToAdd : m_ObjectsToAdd)
+	{
+		m_Objects.push_back(objectToAdd);
+		objectToAdd->SetScene(this);
+	}
+	m_ObjectsToAdd.clear();
+	
 	for(GameObject * pGameObject : m_Objects )
 	{
 		pGameObject->Start();
@@ -68,6 +74,29 @@ void Scene::Render() const
 	for (const auto& object : m_Objects)
 	{
 		object->Render();
+	}
+}
+
+void Scene::Swap()
+{
+	for (GameObject* objectToRemove : m_ObjectsToRemove)
+	{
+		m_Objects.erase(std::find(m_Objects.cbegin(), m_Objects.cend(), objectToRemove));
+		delete objectToRemove;
+	}
+	m_ObjectsToRemove.clear();
+	
+	for (GameObject* objectToAdd : m_ObjectsToAdd)
+	{
+		m_Objects.push_back(objectToAdd);
+		objectToAdd->SetScene(this);
+		objectToAdd->Start();
+	}
+	m_ObjectsToAdd.clear();
+
+	for( GameObject * object : m_Objects )
+	{
+		object->Swap();
 	}
 }
 

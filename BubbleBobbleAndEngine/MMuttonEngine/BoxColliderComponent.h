@@ -11,7 +11,6 @@ class BoxColliderComponent :
 {
 public:
 	BoxColliderComponent(float width = 1, float height = 1);
-	// TODO
 	void Start() override;
 	void Update() override {}
 	void PhysicsUpdate() override {};
@@ -23,10 +22,9 @@ public:
 	BaseComponent * Clone() const override;
 	void LoadFromJson(const nlohmann::json& json) override;
 private:
-	// TODO
 	glm::vec2 m_Dimensions;
 
-	bool m_UseOneWay{ true };
+	bool m_UseOneWay{ false };
 
 	const float m_TouchEpsilon{ 0.1f };
 };

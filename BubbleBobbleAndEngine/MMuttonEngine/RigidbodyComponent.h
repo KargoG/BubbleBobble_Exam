@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 #pragma warning(pop)
 
+class TransformComponent;
 class BoxColliderComponent;
 
 enum class TouchFlags
@@ -26,16 +27,25 @@ public:
 	void PhysicsUpdate() override;
 	void Render() const override;
 
-	void AddCollider(BoxColliderComponent* pBoxCollider) { m_BoxColliders.push_back(pBoxCollider); }
+	//void AddCollider(BoxColliderComponent* pBoxCollider) { m_BoxColliders.push_back(pBoxCollider); }
+	void SetCollider(BoxColliderComponent* pBoxCollider);
 	virtual BaseComponent * Clone() const override;
-	void LoadFromJson(const nlohmann::json& json) override { UNREFERENCED_PARAMETER(json); }
-	void AddVelocity(float x, float y) { m_Velocity += glm::vec2{ x, y }; };
+
+	void LoadFromJson(const nlohmann::json& json) override;
+	void AddVelocity(float x, float y) { m_Velocity += glm::vec2{ x, y }; }
+	void Move(float x, float y);
+	
+	TouchFlags GetTouchFlags() const { return m_TouchFlags; };
+
 	
 private:
-	std::vector<BoxColliderComponent*> m_BoxColliders{};
+	TransformComponent* m_pPlayerTransform{ nullptr };
+	
+	BoxColliderComponent* m_pBoxCollider{};
 	glm::vec2 m_Velocity{0, 0};
 
+	bool m_ApplyGravity{ true };
+	
 	TouchFlags m_TouchFlags{ TouchFlags::None };
-
 };
 

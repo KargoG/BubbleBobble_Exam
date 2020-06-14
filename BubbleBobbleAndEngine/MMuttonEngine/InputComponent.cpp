@@ -5,7 +5,7 @@
 
 Command* InputComponent::ProcessInput()
 {
-	DWORD result = XInputGetState(0, &m_State);
+	DWORD result = XInputGetState(m_Controller, &m_State);
 
 	if (result == ERROR_DEVICE_NOT_CONNECTED)
 	{
@@ -89,24 +89,33 @@ bool InputComponent::IsPressed(ControllerButton button) const
 
 float InputComponent::GetAxis(ControllerAxis axis) const
 {
+	float value{ 0 };
 	switch(axis)
 	{
 	case ControllerAxis::LeftThumbstickX:
-		return float(m_State.Gamepad.sThumbLX) / float(SHRT_MAX);
+		value = float(m_State.Gamepad.sThumbLX) / float(SHRT_MAX);
+		break;
 	case ControllerAxis::LeftThumbstickY:
-		return float(m_State.Gamepad.sThumbLY) / float(SHRT_MAX);
+		value = float(m_State.Gamepad.sThumbLY) / float(SHRT_MAX);
+		break;
 	case ControllerAxis::RightThumbstickX:
-		return float(m_State.Gamepad.sThumbRX) / float(SHRT_MAX);
+		value = float(m_State.Gamepad.sThumbRX) / float(SHRT_MAX);
+		break;
 	case ControllerAxis::RightThumbstickY:
-		return float(m_State.Gamepad.sThumbRY) / float(SHRT_MAX);
+		value = float(m_State.Gamepad.sThumbRY) / float(SHRT_MAX);
+		break;
 	case ControllerAxis::LeftTrigger:
-		return float(m_State.Gamepad.bLeftTrigger) / 255.f;
+		value = float(m_State.Gamepad.bLeftTrigger) / 255.f;
+		break;
 	case ControllerAxis::RightTrigger:
-		return float(m_State.Gamepad.bRightTrigger) / 255.f;
+		value = float(m_State.Gamepad.bRightTrigger) / 255.f;
+		break;
 	default: ;
 	}
 
-	return 0;
+	value = (abs(value) < m_DeadZone) ? 0 : value;
+	
+	return value;
 }
 
 void InputComponent::RegisterCommand( ControllerButton button, Command *command )

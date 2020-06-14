@@ -55,3 +55,8 @@ Scene* SceneManager::GetScene( const std::string &name )
 	
 	return nullptr;
 }
+
+void SceneManager::Swap()
+{
+	m_pActiveScene->Swap();
+}
