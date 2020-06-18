@@ -10,13 +10,6 @@ RigidbodyComponent::RigidbodyComponent(b2BodyType bodyType) : m_BodyType{ bodyTy
 {
 }
 
-RigidbodyComponent::~RigidbodyComponent()
-{
-	//b2Body* toDelete{ m_pRigidBody };
-	//m_pRigidBody = nullptr;
-	//m_pGameObject->GetScene()->GetPhysicsWorld().DestroyBody(toDelete);
-}
-
 void RigidbodyComponent::Awake()
 {
 	m_pPlayerTransform = m_pGameObject->GetComponent<TransformComponent>();

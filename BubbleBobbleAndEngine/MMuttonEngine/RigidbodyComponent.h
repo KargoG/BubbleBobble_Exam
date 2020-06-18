@@ -29,13 +29,11 @@ class RigidbodyComponent :
 {
 public:
 	RigidbodyComponent(b2BodyType bodyType = b2_staticBody);
-	~RigidbodyComponent();
 	
 	void Awake() override;
 	void Update() override;
 	void PhysicsUpdate() override;
 
-	//void AddCollider(BoxColliderComponent* pBoxCollider) { m_BoxColliders.push_back(pBoxCollider); }
 	b2Fixture* AddCollider(const b2FixtureDef &def);
 	virtual BaseComponent * Clone() const override;
 

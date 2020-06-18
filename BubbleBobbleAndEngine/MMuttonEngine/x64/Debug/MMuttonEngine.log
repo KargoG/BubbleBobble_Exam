@@ -1,4 +1,13 @@
-﻿SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
+﻿  BaseComponent.cpp
+  BoxColliderComponent.cpp
+  CircleColliderComponent.cpp
+  ColliderComponent.cpp
+  Renderer.cpp
+  RigidbodyComponent.cpp
+  Scene.cpp
+  TransformComponent.cpp
+  Generating Code...
+SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 SDL2_ttf.lib(SDL2_ttf.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
 xinput.lib(XINPUT1_4.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
   MMuttonEngine.vcxproj -> D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Debug\MMuttonEngine.lib

@@ -3,6 +3,8 @@
   BaseComponent.cpp
   BinaryReader.cpp
   BoxColliderComponent.cpp
+  CircleColliderComponent.cpp
+  ColliderComponent.cpp
   Font.cpp
   GameMode.cpp
   GameObject.cpp
@@ -17,6 +19,8 @@
   Texture2D.cpp
   TextureRendererComponent.cpp
   Time.cpp
+  Generating Code...
+  Compiling...
   TransformComponent.cpp
   Generating Code...
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored
