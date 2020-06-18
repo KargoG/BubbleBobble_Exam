@@ -1,41 +1,13 @@
-﻿  AIControllerComponent.cpp
-  BulletBehaviourComponent.cpp
-  ControllerComponent.cpp
-  Enemy.cpp
-  LevelLoader.cpp
-  Player.cpp
-  PlayerControllerComponent.cpp
-  Generating Code...
-     Creating library D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\Win32\Debug\BubbleBobble.lib and object D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\Win32\Debug\BubbleBobble.exp
-MMuttonEngine.lib(TextComponent.obj) : error LNK2001: unresolved external symbol "public: __thiscall b2Draw::b2Draw(void)" (??0b2Draw@@QAE@XZ)
-Minigin.obj : error LNK2001: unresolved external symbol "public: __thiscall b2Draw::b2Draw(void)" (??0b2Draw@@QAE@XZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2001: unresolved external symbol "public: __thiscall b2Draw::b2Draw(void)" (??0b2Draw@@QAE@XZ)
-MMuttonEngine.lib(ResourceManager.obj) : error LNK2001: unresolved external symbol "public: __thiscall b2Draw::b2Draw(void)" (??0b2Draw@@QAE@XZ)
-MMuttonEngine.lib(TextureRendererComponent.obj) : error LNK2001: unresolved external symbol "public: __thiscall b2Draw::b2Draw(void)" (??0b2Draw@@QAE@XZ)
-MMuttonEngine.lib(RigidbodyComponent.obj) : error LNK2019: unresolved external symbol "public: class b2Fixture * __thiscall b2Body::CreateFixture(struct b2FixtureDef const *)" (?CreateFixture@b2Body@@QAEPAVb2Fixture@@PBUb2FixtureDef@@@Z) referenced in function "public: class b2Fixture * __thiscall RigidbodyComponent::AddCollider(struct b2FixtureDef const &)" (?AddCollider@RigidbodyComponent@@QAEPAVb2Fixture@@ABUb2FixtureDef@@@Z)
-MMuttonEngine.lib(RigidbodyComponent.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2Body::SetTransform(struct b2Vec2 const &,float)" (?SetTransform@b2Body@@QAEXABUb2Vec2@@M@Z) referenced in function "public: void __thiscall RigidbodyComponent::Move(float,float)" (?Move@RigidbodyComponent@@QAEXMM@Z)
-MMuttonEngine.lib(RigidbodyComponent.obj) : error LNK2019: unresolved external symbol "public: class b2Body * __thiscall b2World::CreateBody(struct b2BodyDef const *)" (?CreateBody@b2World@@QAEPAVb2Body@@PBUb2BodyDef@@@Z) referenced in function "public: virtual void __thiscall RigidbodyComponent::Awake(void)" (?Awake@RigidbodyComponent@@UAEXXZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: __thiscall b2World::b2World(struct b2Vec2 const &)" (??0b2World@@QAE@ABUb2Vec2@@@Z) referenced in function "private: __thiscall Scene::Scene(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Scene@@AAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: __thiscall b2World::~b2World(void)" (??1b2World@@QAE@XZ) referenced in function "public: virtual __thiscall Scene::~Scene(void)" (??1Scene@@UAE@XZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2World::SetContactListener(class b2ContactListener *)" (?SetContactListener@b2World@@QAEXPAVb2ContactListener@@@Z) referenced in function "public: void __thiscall Scene::Awake(void)" (?Awake@Scene@@QAEXXZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2World::SetDebugDraw(class b2Draw *)" (?SetDebugDraw@b2World@@QAEXPAVb2Draw@@@Z) referenced in function "public: void __thiscall Scene::Awake(void)" (?Awake@Scene@@QAEXXZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2World::DestroyBody(class b2Body *)" (?DestroyBody@b2World@@QAEXPAVb2Body@@@Z) referenced in function "public: void __thiscall Scene::Swap(void)" (?Swap@Scene@@QAEXXZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2World::Step(float,int,int)" (?Step@b2World@@QAEXMHH@Z) referenced in function "public: void __thiscall Scene::PhysicsUpdate(void)" (?PhysicsUpdate@Scene@@QAEXXZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2World::DebugDraw(void)" (?DebugDraw@b2World@@QAEXXZ) referenced in function "public: void __thiscall Scene::Render(void)" (?Render@Scene@@QAEXXZ)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2World::RayCast(class b2RayCastCallback *,struct b2Vec2 const &,struct b2Vec2 const &)const " (?RayCast@b2World@@QBEXPAVb2RayCastCallback@@ABUb2Vec2@@1@Z) referenced in function "public: void __thiscall Scene::RayCast(class b2RayCastCallback *,struct glm::tvec2<float,0>,struct glm::tvec2<float,0>)" (?RayCast@Scene@@QAEXPAVb2RayCastCallback@@U?$tvec2@M$0A@@glm@@1@Z)
-MMuttonEngine.lib(Scene.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2Draw::SetFlags(unsigned int)" (?SetFlags@b2Draw@@QAEXI@Z) referenced in function "public: void __thiscall Scene::Awake(void)" (?Awake@Scene@@QAEXXZ)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2WorldManifold::Initialize(struct b2Manifold const *,struct b2Transform const &,float,struct b2Transform const &,float)" (?Initialize@b2WorldManifold@@QAEXPBUb2Manifold@@ABUb2Transform@@M1M@Z) referenced in function "public: void __thiscall b2Contact::GetWorldManifold(struct b2WorldManifold *)const " (?GetWorldManifold@b2Contact@@QBEXPAUb2WorldManifold@@@Z)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual class b2Shape * __thiscall b2PolygonShape::Clone(class b2BlockAllocator *)const " (?Clone@b2PolygonShape@@UBEPAVb2Shape@@PAVb2BlockAllocator@@@Z)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual int __thiscall b2PolygonShape::GetChildCount(void)const " (?GetChildCount@b2PolygonShape@@UBEHXZ)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2019: unresolved external symbol "public: void __thiscall b2PolygonShape::SetAsBox(float,float,struct b2Vec2 const &,float)" (?SetAsBox@b2PolygonShape@@QAEXMMABUb2Vec2@@M@Z) referenced in function "public: virtual void __thiscall BoxColliderComponent::Start(void)" (?Start@BoxColliderComponent@@UAEXXZ)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual bool __thiscall b2PolygonShape::TestPoint(struct b2Transform const &,struct b2Vec2 const &)const " (?TestPoint@b2PolygonShape@@UBE_NABUb2Transform@@ABUb2Vec2@@@Z)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual bool __thiscall b2PolygonShape::RayCast(struct b2RayCastOutput *,struct b2RayCastInput const &,struct b2Transform const &,int)const " (?RayCast@b2PolygonShape@@UBE_NPAUb2RayCastOutput@@ABUb2RayCastInput@@ABUb2Transform@@H@Z)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual void __thiscall b2PolygonShape::ComputeAABB(struct b2AABB *,struct b2Transform const &,int)const " (?ComputeAABB@b2PolygonShape@@UBEXPAUb2AABB@@ABUb2Transform@@H@Z)
-MMuttonEngine.lib(BoxColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual void __thiscall b2PolygonShape::ComputeMass(struct b2MassData *,float)const " (?ComputeMass@b2PolygonShape@@UBEXPAUb2MassData@@M@Z)
-MMuttonEngine.lib(CircleColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual class b2Shape * __thiscall b2CircleShape::Clone(class b2BlockAllocator *)const " (?Clone@b2CircleShape@@UBEPAVb2Shape@@PAVb2BlockAllocator@@@Z)
-MMuttonEngine.lib(CircleColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual int __thiscall b2CircleShape::GetChildCount(void)const " (?GetChildCount@b2CircleShape@@UBEHXZ)
-MMuttonEngine.lib(CircleColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual bool __thiscall b2CircleShape::TestPoint(struct b2Transform const &,struct b2Vec2 const &)const " (?TestPoint@b2CircleShape@@UBE_NABUb2Transform@@ABUb2Vec2@@@Z)
-MMuttonEngine.lib(CircleColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual bool __thiscall b2CircleShape::RayCast(struct b2RayCastOutput *,struct b2RayCastInput const &,struct b2Transform const &,int)const " (?RayCast@b2CircleShape@@UBE_NPAUb2RayCastOutput@@ABUb2RayCastInput@@ABUb2Transform@@H@Z)
-MMuttonEngine.lib(CircleColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual void __thiscall b2CircleShape::ComputeAABB(struct b2AABB *,struct b2Transform const &,int)const " (?ComputeAABB@b2CircleShape@@UBEXPAUb2AABB@@ABUb2Transform@@H@Z)
-MMuttonEngine.lib(CircleColliderComponent.obj) : error LNK2001: unresolved external symbol "public: virtual void __thiscall b2CircleShape::ComputeMass(struct b2MassData *,float)const " (?ComputeMass@b2CircleShape@@UBEXPAUb2MassData@@M@Z)
-D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\Win32\Debug\BubbleBobble.exe : fatal error LNK1120: 27 unresolved externals
+﻿  Minigin.vcxproj -> D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\Win32\Debug\BubbleBobble.exe
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2\lib\x86\SDL2.dll
+  1 File(s) copied
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x86\libjpeg-9.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x86\libpng16-16.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x86\libtiff-5.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x86\libwebp-7.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x86\SDL2_image.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_image\lib\x86\zlib1.dll
+  6 File(s) copied
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_ttf\lib\x86\libfreetype-6.dll
+  D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2_ttf\lib\x86\SDL2_ttf.dll
+  2 File(s) copied

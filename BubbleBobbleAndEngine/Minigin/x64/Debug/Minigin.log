@@ -1,13 +1,20 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Minigin.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  MiniginPCH.cpp
   AIControllerComponent.cpp
+  AnimationStates.cpp
+  BubbleBobbleAnimationComponent.cpp
   BulletBehaviourComponent.cpp
   ControllerComponent.cpp
   CoopMode.cpp
   Enemy.cpp
+  FPS.cpp
   LevelLoader.cpp
+  Main.cpp
+  Minigin.cpp
   Player.cpp
   PlayerControllerComponent.cpp
   SingleMode.cpp
+  StartMenu.cpp
   VersusMode.cpp
   Generating Code...
      Creating library D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Debug\BubbleBobble.lib and object D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Debug\BubbleBobble.exp
