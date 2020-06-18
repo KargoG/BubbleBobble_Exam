@@ -154,6 +154,7 @@ void Minigin::Run()
 
 	LoadGame();
 
+	SceneManager::GetInstance().Awake();
 	SceneManager::GetInstance().Start();
 	
 	{

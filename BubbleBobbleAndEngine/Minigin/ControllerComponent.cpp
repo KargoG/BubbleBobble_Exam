@@ -19,7 +19,7 @@ void ControllerComponent::Update()
 	glm::vec3 position{ transform->GetPosition() };
 	if(position.y < 0)
 	{
-		position.y = float(GameData::GetInstance().GetWindowHeight()) - GameData::GetInstance().GetSpriteHeight();
-		transform->SetPosition(position);
+		RigidbodyComponent* rb = m_pGameObject->GetComponent<RigidbodyComponent>();
+		rb->Move(0, float(GameData::GetInstance().GetLevelHeight()));
 	}
 }

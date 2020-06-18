@@ -14,7 +14,7 @@ CoopMode::CoopMode(const std::vector<EnemyData>& enemies, int level) : m_Enemies
 {
 }
 
-void CoopMode::Start()
+void CoopMode::Awake()
 {
 	for (const EnemyData& enemy : m_Enemies)
 	{
@@ -29,9 +29,7 @@ void CoopMode::Start()
 			break;
 		default: continue;
 		}
-		glm::vec3 spawnPos{ enemy.Column * GameData::GetInstance().GetSpriteWidth(), enemy.Row * GameData::GetInstance().GetSpriteHeight() , 0 };
-
-		spawnPos *= float(GameData::GetInstance().GetSpriteScale());
+		glm::vec3 spawnPos{ enemy.Column, enemy.Row , 0 };
 
 		TransformComponent* transform = newEnemy->GetComponent<TransformComponent>();
 		transform->SetPosition(spawnPos);
@@ -46,7 +44,7 @@ void CoopMode::Start()
 
 	GameObject* player{ ResourceManager::GetInstance().SpawnPrototype("Bub") };
 
-	player->GetComponent<TransformComponent>()->SetPosition(40, 30, 0);
+	player->GetComponent<TransformComponent>()->SetPosition(5, 3.8f, 0);
 	player->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
 	player->GetComponent<PlayerControllerComponent>()->AddObserver(this);
@@ -55,7 +53,7 @@ void CoopMode::Start()
 
 	GameObject* player2{ ResourceManager::GetInstance().SpawnPrototype("Bob") };
 
-	player2->GetComponent<TransformComponent>()->SetPosition(440, 30, 0);
+	player2->GetComponent<TransformComponent>()->SetPosition( 55, 3.8f, 0);
 	player2->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
 	player2->GetComponent<PlayerControllerComponent>()->AddObserver(this);

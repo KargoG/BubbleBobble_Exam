@@ -8,9 +8,6 @@ class TextureRendererComponent :
 public:
 	virtual ~TextureRendererComponent();
 	
-	virtual void Start() override;
-	virtual void Update() override;
-	virtual void PhysicsUpdate() override;
 	virtual void Render() const override;
 	
 	void SetTexture( const char * filename );

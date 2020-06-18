@@ -5,6 +5,7 @@
 //#include <glm/vec2.hpp>
 #include "../3rdParty/glm/glm/detail/type_vec2.hpp"
 #pragma warning(pop)
+#include <box2d/b2_draw.h>
 #include <SDL_hints.h>
 #include <SDL.h>
 
@@ -15,7 +16,7 @@ class Texture2D;
 /**
  * Simple RAII wrapper for the SDL renderer
  */
-class Renderer final : public Singleton<Renderer>
+class Renderer final : public Singleton<Renderer>, public b2Draw
 {
 public:
 	void Init(SDL_Window* window);
@@ -30,9 +31,20 @@ public:
 
 	static void MirrorRect(SDL_Rect &rect);
 	static void MirrorPoint(float &yPos);
+	static void MirrorPoint(int &yPos);
 	
 	SDL_Renderer* GetSDLRenderer() const { return m_Renderer; }
+	virtual void DrawPolygon( const b2Vec2 *vertices, int32 vertexCount, const b2Color &color ) override;
+	virtual void DrawSolidPolygon( const b2Vec2 *vertices, int32 vertexCount, const b2Color &color ) override;
+	virtual void DrawCircle( const b2Vec2 &center, float radius, const b2Color &color ) override;
+	virtual void DrawSolidCircle( const b2Vec2 &center, float radius, const b2Vec2 &axis, const b2Color &color )
+	override;
+	virtual void DrawSegment( const b2Vec2 &p1, const b2Vec2 &p2, const b2Color &color ) override;
+	virtual void DrawTransform( const b2Transform &xf ) override;
+	virtual void DrawPoint( const b2Vec2 &p, float size, const b2Color &color ) override;
 private:
 	SDL_Renderer* m_Renderer{};
+
+	float m_RenderScale{ 16 };
 };
 

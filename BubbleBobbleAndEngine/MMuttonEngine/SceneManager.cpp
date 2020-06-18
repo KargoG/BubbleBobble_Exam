@@ -2,6 +2,14 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+void SceneManager::Awake()
+{
+	for (auto scene : m_Scenes)
+	{
+		scene->Awake();
+	}
+}
+
 void SceneManager::Start()
 {
 	for (auto scene : m_Scenes)

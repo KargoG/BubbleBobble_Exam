@@ -9,7 +9,7 @@ class SingleMode :
 {
 public:
 	SingleMode(const std::vector<EnemyData>& enemies, int level);
-	void Start() override;
+	void Awake() override;
 
 	void OnNotify(void* pData, int events) override;
 private:

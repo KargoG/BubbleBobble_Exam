@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "RigidbodyComponent.h"
 #include "Time.h"
-#include "BoxColliderComponent.h"
 #include "PlayerControllerComponent.h"
 #include "Scene.h"
 
@@ -17,33 +16,36 @@ void BulletBehaviourComponent::Start()
 
 void BulletBehaviourComponent::PhysicsUpdate()
 {
-	if (int(m_pRB->GetTouchFlags()) & (int(TouchFlags::Right) | int(TouchFlags::Left)))
-		m_TouchedWall = true;
-	
 	if(!m_TouchedWall)
-		m_pRB->Move((m_MovingRight ? m_SpeedHorizontal : -m_SpeedHorizontal) * Time::GetInstance().GetPhysicsDeltaTime(), 0);
+		m_pRB->SetVelocity((m_MovingRight ? m_SpeedHorizontal : -m_SpeedHorizontal), 0);
 	else
-		m_pRB->Move(0, m_SpeedVertical * Time::GetInstance().GetPhysicsDeltaTime());
+		m_pRB->SetVelocity(0, m_SpeedVertical);
 }
 
-void BulletBehaviourComponent::OnCollision(const BoxColliderComponent* other)
+void BulletBehaviourComponent::OnTriggerEnter(const Collision* collision)
 {
-	if (GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer02) // Bubble
+	if (GetGameObject()->GetTag() == "Bubble") // Bubble
 	{
-		if(other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer03)
+		if(collision->otherCollider && collision->otherCollider->GetGameObject()->GetTag() == "Enemy")
 		{
-			other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
+			collision->otherCollider->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 			m_pGameObject->GetScene()->Remove(m_pGameObject);
+
+			return;
 		}
 	}
 	else // Bullet
 	{
-		if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+		if (collision->otherCollider && collision->otherCollider->GetGameObject()->GetTag() == "Player")
 		{
-			other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
+			collision->otherCollider->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 			m_pGameObject->GetScene()->Remove(m_pGameObject);
+			
+			return;
 		}
 	}
+
+	m_TouchedWall = true;
 }
 
 BaseComponent * BulletBehaviourComponent::Clone() const

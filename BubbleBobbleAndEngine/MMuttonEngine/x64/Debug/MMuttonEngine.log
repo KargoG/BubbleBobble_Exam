@@ -1,6 +1,10 @@
-﻿  AnimationComponent.cpp
+﻿  pch.cpp
+  AnimationComponent.cpp
   BaseComponent.cpp
+  BinaryReader.cpp
   BoxColliderComponent.cpp
+  Font.cpp
+  GameMode.cpp
   GameObject.cpp
   InputComponent.cpp
   Renderer.cpp
@@ -8,9 +12,11 @@
   RigidbodyComponent.cpp
   Scene.cpp
   SceneManager.cpp
+  Subject.cpp
   TextComponent.cpp
   Texture2D.cpp
   TextureRendererComponent.cpp
+  Time.cpp
   TransformComponent.cpp
   Generating Code...
 SDL2_image.lib(SDL2_image.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in SDL2.lib(SDL2.dll); second definition ignored

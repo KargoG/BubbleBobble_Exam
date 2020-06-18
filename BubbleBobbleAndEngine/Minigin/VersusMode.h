@@ -7,7 +7,7 @@ class VersusMode :
 {
 public:
 	VersusMode(int level) : m_Level{level}{};
-	void Start() override;
+	void Awake() override;
 	
 	void OnNotify(void* pData, int events) override;
 

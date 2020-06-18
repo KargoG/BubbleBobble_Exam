@@ -43,6 +43,28 @@ void AIControllerComponent::PhysicsUpdate()
 	}
 }
 
+void AIControllerComponent::OnTriggerEnter( const Collision* other )
+{
+	glm::vec2 collCenter{ other->ownCollider->GetCenter() };
+	if (collCenter.x < 0.5f)
+		m_WallsLeft++;
+	else if (collCenter.x > 0.5f)
+		m_WallsRight++;
+	else if (collCenter.y < 0.5f)
+		m_WallsBeneath++;
+}
+
+void AIControllerComponent::OnTriggerExit( const Collision* other )
+{
+	glm::vec2 collCenter{ other->ownCollider->GetCenter() };
+	if (collCenter.x < 0.5f)
+		m_WallsLeft--;
+	else if (collCenter.x > 0.5f)
+		m_WallsRight--;
+	else if (collCenter.y < 0.5f)
+		m_WallsBeneath--;
+}
+
 BaseComponent * AIControllerComponent::Clone() const
 {
 	AIControllerComponent *cc{ new AIControllerComponent{} };
@@ -103,9 +125,9 @@ void AIControllerComponent::Die()
 	// TODO spawn points?
 }
 
-void AIControllerComponent::OnCollision( const BoxColliderComponent *other )
+void AIControllerComponent::OnCollisionEnter( const Collision* other )
 {
-	AIState* newState = m_pCurrentState->OnCollision(other, this);
+	AIState* newState = m_pCurrentState->OnCollision(other->otherCollider, this);
 
 	if (newState)
 	{
@@ -117,15 +139,18 @@ void AIControllerComponent::OnCollision( const BoxColliderComponent *other )
 GameObject* AIControllerComponent::GetTargetedPlayer() const
 {
 	PlayerControllerComponent *pPlayer = m_pGameObject->GetScene()->GetObjectWithComponent<PlayerControllerComponent>();
+
+	if (!pPlayer)
+		return nullptr;
 	
 	return pPlayer->GetGameObject();
 }
 
 // States
-
 AIState* WalkingState::Update(AIControllerComponent* controller)
 {
-	if (controller->GetTargetedPlayer()->GetComponent<TransformComponent>()->GetPosition().y > controller->GetGameObject()->GetComponent<TransformComponent>()->GetPosition().y)
+	GameObject *m_pTargetedPlayer{ controller->GetTargetedPlayer() };
+	if (m_pTargetedPlayer && m_pTargetedPlayer->GetComponent<TransformComponent>()->GetPosition().y > controller->GetGameObject()->GetComponent<TransformComponent>()->GetPosition().y)
 	{
 		controller->Jump();
 		return nullptr;
@@ -136,21 +161,19 @@ AIState* WalkingState::Update(AIControllerComponent* controller)
 
 AIState * WalkingState::PhysicsUpdate( AIControllerComponent * controller)
 {
-	TouchFlags flags = controller->GetRigidbody()->GetTouchFlags();
-
 	if (controller->IsLookingRight())
-		controller->SetLookingRight((int(flags) & int(TouchFlags::Right)) == 0);
+		controller->SetLookingRight(!(controller->GetWallsRight() > 0));
 	else
-		controller->SetLookingRight((int(flags) & int(TouchFlags::Left)) != 0);
+		controller->SetLookingRight(controller->GetWallsLeft() > 0);
 
-	if ((int(flags) & int(TouchFlags::Bottom)) == 0)
+	if (controller->GetWallsBeneath() <= 0)
 		return new FallingState{};
 
 	
 	if (controller->IsLookingRight())
-		controller->GetRigidbody()->Move(controller->GetWalkSpeed() * Time::GetInstance().GetDeltaTime(), 0);
+		controller->GetRigidbody()->SetVelocity(controller->GetWalkSpeed(), 0);
 	else
-		controller->GetRigidbody()->Move(-controller->GetWalkSpeed() * Time::GetInstance().GetDeltaTime(), 0);
+		controller->GetRigidbody()->SetVelocity(-controller->GetWalkSpeed(), 0);
 
 	return nullptr;
 }
@@ -167,7 +190,7 @@ AIState * WalkingState::TakeDamage( AIControllerComponent * )
 
 AIState * WalkingState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
 {
-	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	if (other->GetGameObject()->GetTag() == "Player")
 	{
 		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 	}
@@ -175,11 +198,9 @@ AIState * WalkingState::OnCollision( const BoxColliderComponent *other, AIContro
 	return nullptr;
 }
 
-AIState * FallingState::PhysicsUpdate( AIControllerComponent * controller)
+AIState * FallingState::PhysicsUpdate(AIControllerComponent * controller)
 {
-	TouchFlags flags = controller->GetRigidbody()->GetTouchFlags();
-
-	if ((int(flags) & int(TouchFlags::Bottom)) != 0)
+	if (controller->GetWallsBeneath() > 0)
 		return new WalkingState{};
 
 	return nullptr;
@@ -192,7 +213,7 @@ AIState * FallingState::TakeDamage( AIControllerComponent * )
 
 AIState * FallingState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
 {
-	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	if (other->GetGameObject()->GetTag() == "Player")
 	{
 		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 	}
@@ -202,7 +223,7 @@ AIState * FallingState::OnCollision( const BoxColliderComponent *other, AIContro
 
 AIState* JumpingUpState::PhysicsUpdate(AIControllerComponent* controller)
 {
-	controller->GetRigidbody()->AddVelocity(0, 10);
+	controller->GetRigidbody()->SetVelocity(0, 10);
 	return new WalkingState{};
 }
 
@@ -213,7 +234,7 @@ AIState * JumpingUpState::TakeDamage( AIControllerComponent * )
 
 AIState * JumpingUpState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
 {
-	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	if (other->GetGameObject()->GetTag() == "Player")
 	{
 		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 	}
@@ -223,7 +244,7 @@ AIState * JumpingUpState::OnCollision( const BoxColliderComponent *other, AICont
 
 AIState* JumpingForwardState::PhysicsUpdate( AIControllerComponent *controller )
 {
-	controller->GetRigidbody()->AddVelocity(50, 10);
+	controller->GetRigidbody()->SetVelocity(50, 10);
 	return new WalkingState{};
 }
 
@@ -234,7 +255,7 @@ AIState * JumpingForwardState::TakeDamage( AIControllerComponent * )
 
 AIState * JumpingForwardState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
 {
-	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	if (other->GetGameObject()->GetTag() == "Player")
 	{
 		other->GetGameObject()->GetComponent<ControllerComponent>()->TakeDamage();
 	}
@@ -258,7 +279,7 @@ AIState * BubbleState::Update( AIControllerComponent *controller )
 
 AIState * BubbleState::OnCollision( const BoxColliderComponent *other, AIControllerComponent *controller )
 {
-	if (other->GetGameObject()->GetPhysicsLayer() == PhysicsLayer::Layer01)
+	if (other && other->GetGameObject()->GetTag() == "Player")
 	{
 		controller->Die();
 	}

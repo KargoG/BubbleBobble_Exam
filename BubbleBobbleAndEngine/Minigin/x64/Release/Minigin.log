@@ -1,24 +1,9 @@
-﻿  MiniginPCH.cpp
-  AIControllerComponent.cpp
-  AnimationStates.cpp
-  BubbleBobbleAnimationComponent.cpp
-  BulletBehaviourComponent.cpp
-  ControllerComponent.cpp
-  CoopMode.cpp
-  Enemy.cpp
-  FPS.cpp
-  LevelLoader.cpp
-  Main.cpp
-  Minigin.cpp
-  Player.cpp
-  PlayerControllerComponent.cpp
-  SingleMode.cpp
-  VersusMode.cpp
+﻿  ControllerComponent.cpp
      Creating library D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.lib and object D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.exp
   Generating code
-  208 of 2474 functions ( 8.4%) were compiled, the rest were copied from previous compilation.
-    69 functions were new in current compilation
-    176 functions had inline decision re-evaluated but remain unchanged
+  3 of 2492 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    13 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Minigin.vcxproj -> D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\x64\Release\BubbleBobble.exe
   D:\OneDrive\OneDrive - Hogeschool West-Vlaanderen\DAE\Sem04\Programming4\Exam\BubbleBobble_Exam\BubbleBobbleAndEngine\3rdParty\SDL2\lib\x64\SDL2.dll

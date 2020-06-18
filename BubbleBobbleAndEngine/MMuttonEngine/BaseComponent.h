@@ -3,20 +3,28 @@
 #include <json.hpp>
 #include "BaseComponent.h"
 
+struct Collision;
 class BoxColliderComponent;
 class GameObject;
+struct b2ContactImpulse;
+class b2Contact;
 
-class BaseComponent
+class BaseComponent abstract
 {
 public:
-	virtual void Start() = 0;
-	virtual void Update() = 0;
-	virtual void PhysicsUpdate() = 0;
-	virtual void Render() const = 0;
+	virtual void Awake(){}
+	virtual void Start(){};
+	virtual void Update(){};
+	virtual void PhysicsUpdate(){};
+	virtual void Render() const{};
 	virtual BaseComponent* Clone() const = 0;
 	virtual void LoadFromJson(const nlohmann::json& json) = 0;
-	virtual void OnCollision(const BoxColliderComponent*) {}
-	virtual void Swap(){};
+	virtual void OnCollisionEnter(const Collision*) {}
+	virtual void OnCollisionExit(const Collision*) {}
+	virtual void OnTriggerEnter(const Collision*) {}
+	virtual void OnTriggerExit(const Collision*) {}
+	virtual void PostSolve(b2Contact*, const b2ContactImpulse*){};
+	virtual void Swap(){}
 
 	
 	BaseComponent();

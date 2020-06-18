@@ -11,15 +11,15 @@
 #include "ResourceManager.h"
 #include "LevelLoader.h"
 
-void VersusMode::Start()
+void VersusMode::Awake()
 {
 	GameObject* player{ ResourceManager::GetInstance().SpawnPrototype("Bub") };
 	GameObject *enemy{ ResourceManager::GetInstance().SpawnPrototype("ControlledMaita") };
 
-	player->GetComponent<TransformComponent>()->SetPosition(40, 30, 0);
+	player->GetComponent<TransformComponent>()->SetPosition(5, 3.8f, 0);
 	player->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
-	enemy->GetComponent<TransformComponent>()->SetPosition(440, 30, 0);
+	enemy->GetComponent<TransformComponent>()->SetPosition(55, 3.8f, 0);
 	enemy->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
 	enemy->GetComponent<PlayerControllerComponent>()->SetPlayerNumber(1);

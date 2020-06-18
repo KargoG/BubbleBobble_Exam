@@ -14,7 +14,7 @@ SingleMode::SingleMode( const std::vector<EnemyData> &enemies, int level ) : m_E
 {
 }
 
-void SingleMode::Start()
+void SingleMode::Awake()
 {
 	for (const EnemyData& enemy : m_Enemies)
 	{
@@ -29,7 +29,7 @@ void SingleMode::Start()
 			break;
 		default: continue;
 		}
-		glm::vec3 spawnPos{ enemy.Column * GameData::GetInstance().GetSpriteWidth(), enemy.Row * GameData::GetInstance().GetSpriteHeight() , 0 };
+		glm::vec3 spawnPos{ enemy.Column, enemy.Row, 0 };
 
 		spawnPos *= float(GameData::GetInstance().GetSpriteScale());
 
@@ -45,7 +45,7 @@ void SingleMode::Start()
 
 	GameObject* player{ ResourceManager::GetInstance().SpawnPrototype("Bub") };
 
-	player->GetComponent<TransformComponent>()->SetPosition(40, 30, 0);
+	player->GetComponent<TransformComponent>()->SetPosition(5, 3.8f, 0);
 	player->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 	player->GetComponent<PlayerControllerComponent>()->AddObserver(this);
 

@@ -1,8 +1,15 @@
 #include "pch.h"
 #include "TransformComponent.h"
+#include "GameObject.h"
+#include "RigidbodyComponent.h"
 
 TransformComponent::TransformComponent( float x, float y, float z ) : m_Position{x, y, z}
 {
+}
+
+void TransformComponent::Start()
+{
+	m_pRB = m_pGameObject->GetComponent<RigidbodyComponent>();
 }
 
 TransformComponent::TransformComponent( const glm::vec3 &position ) : m_Position{position}
@@ -13,11 +20,22 @@ TransformComponent::TransformComponent( const glm::vec3 &position, const glm::ve
 {
 }
 
-void TransformComponent::SetPosition(const float x, const float y, const float z)
+void TransformComponent::SetPosition(const float x, const float y, const float z, bool updateRB)
 {
 	m_Position.x = x;
 	m_Position.y = y;
 	m_Position.z = z;
+
+	if (updateRB && m_pRB)
+		m_pRB->SetPosition(x, y);
+}
+
+void TransformComponent::SetPosition( const glm::vec3 &position, bool updateRB )
+{
+	m_Position = position;
+	
+	if (updateRB && m_pRB)
+		m_pRB->SetPosition(m_Position.x, m_Position.y);
 }
 
 void TransformComponent::SetScale( float x, float y, float z )

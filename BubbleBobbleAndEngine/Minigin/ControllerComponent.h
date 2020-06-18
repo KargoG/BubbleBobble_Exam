@@ -8,8 +8,6 @@ class ControllerComponent abstract :
 public:
 	void Start() override;
 	void Update() override;
-	void PhysicsUpdate() override = 0;
-	void Render() const override = 0;
 	BaseComponent * Clone() const override = 0;
 	void LoadFromJson( const nlohmann::json &json ) override = 0;
 

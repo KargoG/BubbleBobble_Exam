@@ -2,6 +2,10 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "GameMode.h"
+#include "Time.h"
+#include <box2d/b2_contact.h>
+#include <box2d/b2_draw.h>
+#include "Renderer.h"
 
 unsigned int Scene::m_IdCounter = 0;
 
@@ -18,7 +22,96 @@ void Scene::SetGameMode( GameMode *gameMode )
 		m_pGameMode->Start();
 }
 
-Scene::Scene(const std::string& name) : m_Name(name) {}
+Scene::Scene(const std::string& name) : m_Name(name), m_PhysicsWorld{ b2Vec2{0.0f, -9.81f} } {}
+
+
+void Scene::BeginContact( b2Contact *contact )
+{
+	bool aIsTrigger{ contact->GetFixtureA()->IsSensor() };
+	bool bIsTrigger{ contact->GetFixtureB()->IsSensor() };
+
+	Collision collsionA{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	Collision collsionB{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	
+	if(collsionA.ownCollider && aIsTrigger)
+	{
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionA);
+		if(collsionB.ownCollider && bIsTrigger)
+		{
+			reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionB);
+		}
+		return;
+	}
+
+	if (collsionB.ownCollider && bIsTrigger)
+	{
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionB);
+		return;
+	}
+
+	if (collsionA.ownCollider)
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnCollisionEnter(&collsionA);
+	if (collsionB.ownCollider)
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnCollisionEnter(&collsionB);
+}
+
+void Scene::EndContact( b2Contact *contact )
+{
+	bool aIsTrigger{ contact->GetFixtureA()->IsSensor() };
+	bool bIsTrigger{ contact->GetFixtureB()->IsSensor() };
+	
+	Collision collsionA{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	Collision collsionB{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	
+	if (collsionA.ownCollider && aIsTrigger)
+	{
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionA);
+		if (collsionB.ownCollider && bIsTrigger)
+		{
+			reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionB);
+		}
+		return;
+	}
+
+	if (collsionB.ownCollider && bIsTrigger)
+	{
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionB);
+
+		return;
+	}
+
+	if(collsionA.ownCollider)
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnCollisionExit(&collsionA);
+	if (collsionB.ownCollider)
+		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnCollisionExit(&collsionB);
+}
+
+void Scene::PreSolve( b2Contact *contact, const b2Manifold *oldManifold )
+{
+	BoxColliderComponent *coll1{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	BoxColliderComponent *coll2{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	if(coll1)
+		coll1->PreSolve(contact, oldManifold);
+
+	if(coll2)
+		coll2->PreSolve(contact, oldManifold);
+}
+
+void Scene::PostSolve( b2Contact *contact, const b2ContactImpulse *impulse )
+{
+	BoxColliderComponent* coll1{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	BoxColliderComponent* coll2{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+
+	if (coll1)
+		coll1->GetGameObject()->PostSolve(contact, impulse);
+	if (coll2)
+		coll2->GetGameObject()->PostSolve(contact, impulse);
+}
+
+void Scene::RayCast(b2RayCastCallback* callback, glm::vec2 startpoint, glm::vec2 endpoint)
+{
+	m_PhysicsWorld.RayCast(callback, b2Vec2{ startpoint.x, startpoint.y }, b2Vec2{ endpoint.x, endpoint.y });
+}
 
 Scene::~Scene()
 {
@@ -31,10 +124,10 @@ Scene::~Scene()
 	delete m_pGameMode;
 }
 
-void Scene::RemoveCollider( BoxColliderComponent *colliderToRemove )
-{
-	m_ColliderToRemove.push_back(colliderToRemove);
-}
+//void Scene::RemoveCollider( BoxColliderComponent *colliderToRemove ) TODO delete???
+//{
+//	m_ColliderToRemove.push_back(colliderToRemove);
+//}
 
 void Scene::Add(GameObject* object)
 {
@@ -52,11 +145,33 @@ void Scene::Remove( GameObject *toRemove )
 	m_ObjectsToRemove.push_back(toRemove);
 }
 
-void Scene::Start()
+void Scene::Awake()
 {
+	m_PhysicsWorld.SetContactListener(this);
+	b2Draw* pRenderer{ &Renderer::GetInstance() };
+	pRenderer->SetFlags(b2Draw::e_aabbBit | b2Draw::e_shapeBit | b2Draw::e_pairBit | b2Draw::e_centerOfMassBit);
+	m_PhysicsWorld.SetDebugDraw(pRenderer);
+
 	if (!m_pGameMode)
 		m_pGameMode = new GameMode{};
 
+	m_pGameMode->Awake();
+
+	for (GameObject* objectToAdd : m_ObjectsToAdd)
+	{
+		m_Objects.push_back(objectToAdd);
+		objectToAdd->SetScene(this);
+	}
+	m_ObjectsToAdd.clear();
+
+	for (GameObject* pGameObject : m_Objects)
+	{
+		pGameObject->Awake();
+	}
+}
+
+void Scene::Start()
+{
 	m_pGameMode->Start();
 	
 	for (GameObject* objectToAdd : m_ObjectsToAdd)
@@ -77,7 +192,10 @@ void Scene::Start()
 void Scene::Update()
 {
 	if (!m_IsInitialized)
+	{
+		Awake();
 		Start();
+	}
 
 	m_pGameMode->Update();
 	
@@ -89,6 +207,8 @@ void Scene::Update()
 
 void Scene::PhysicsUpdate()
 {
+	m_PhysicsWorld.Step(Time::GetInstance().GetPhysicsDeltaTime(), 8, 3); // TODO turn iterations into changeable variables?
+	
 	m_pGameMode->PhysicsUpdate();
 	
 	for (auto& object : m_Objects)
@@ -97,7 +217,7 @@ void Scene::PhysicsUpdate()
 	}
 }
 
-void Scene::Render() const
+void Scene::Render()
 {
 	m_pGameMode->Render();
 	
@@ -105,16 +225,20 @@ void Scene::Render() const
 	{
 		object->Render();
 	}
+
+	m_PhysicsWorld.DebugDraw();
 }
 
 void Scene::Swap()
 {
+	
 	m_pGameMode->Swap();
 	for (GameObject* objectToRemove : m_ObjectsToRemove)
 	{
 		auto it = std::find(m_Objects.cbegin(), m_Objects.cend(), objectToRemove);
 		if (it != m_Objects.cend())
 		{
+			m_PhysicsWorld.DestroyBody((*it)->GetComponent<RigidbodyComponent>()->GetRB());
 			m_Objects.erase(it);
 			delete objectToRemove;
 		}
@@ -131,6 +255,7 @@ void Scene::Swap()
 	{
 		m_Objects.push_back(objectToAdd);
 		objectToAdd->SetScene(this);
+		objectToAdd->Awake();
 		objectToAdd->Start();
 	}
 	m_ObjectsToAdd.clear();

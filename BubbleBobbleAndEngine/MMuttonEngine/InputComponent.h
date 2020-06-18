@@ -49,12 +49,8 @@ class InputComponent : public BaseComponent
 public:
 	~InputComponent() override;
 	
-	virtual void Start() override {};
-	virtual void Update() override { };
-	virtual void PhysicsUpdate() override {};
-	virtual void Render() const override {};
-	virtual BaseComponent* Clone() const override;
-	virtual void LoadFromJson(const nlohmann::json& json) override;
+	BaseComponent* Clone() const override;
+	void LoadFromJson(const nlohmann::json& json) override;
 	
 	bool IsPressed(ControllerButton button) const;
 	float GetAxis(ControllerAxis axis) const;

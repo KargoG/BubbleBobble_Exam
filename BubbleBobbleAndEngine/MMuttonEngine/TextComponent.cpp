@@ -22,10 +22,6 @@ TextComponent::~TextComponent()
 	delete m_pTexture;
 }
 
-void TextComponent::Start()
-{
-}
-
 void TextComponent::Update()
 {
 	if (m_NeedsUpdate) // TODO move to swap method? (double buffer)

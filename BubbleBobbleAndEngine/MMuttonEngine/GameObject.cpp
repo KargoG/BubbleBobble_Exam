@@ -33,25 +33,46 @@ GameObject * GameObject::CreateFromJson( const nlohmann::json &json )
 	UNREFERENCED_PARAMETER(json);
 	GameObject *newGameObject{ new GameObject{} };
 
+	newGameObject->m_Tag = json.at("Tag").get<std::string>();
 	newGameObject->m_Layer = PhysicsLayer(1 << json.at("PhysicsLayer").get<int>());
-	
+
+
 	for( auto it = json.items().begin(); it != json.items().end(); ++it )
 	{
+		nlohmann::json value = it.value();
 		if(it.key() == "IgnoredLayers")
 		{
-			nlohmann::json ignoredLayers = it.value();
-			for (auto layerIt = ignoredLayers.items().begin(); layerIt != ignoredLayers.items().end(); ++layerIt)
+			for (auto layerIt = value.items().begin(); layerIt != value.items().end(); ++layerIt)
 			{
 				int layer{ layerIt.value().get<int>() };
 				newGameObject->AddIgnoredPhysicsLayers(PhysicsLayer(1 << layer));
 			}
 			continue;
 		}
-		if(it.value().is_structured())
-			newGameObject->AddComponent(BaseComponent::CreateFromJson(it.key(), it.value()));
+		if (value.is_structured())
+		{
+			if(value.contains("Multiple"))
+			{
+				for( auto componentJson = value.items().begin(); componentJson != value.items().end(); ++componentJson)
+				{
+					if (componentJson.value().is_structured())
+						newGameObject->AddComponent(BaseComponent::CreateFromJson(it.key(), componentJson.value()));
+				}
+			}
+			else
+				newGameObject->AddComponent(BaseComponent::CreateFromJson(it.key(), value));
+		}
 	}
 	
 	return newGameObject;
+}
+
+void GameObject::Awake()
+{
+	for (BaseComponent* pComponent : m_pComponents)
+	{
+		pComponent->Awake();
+	}
 }
 
 void GameObject::Start()
@@ -84,11 +105,43 @@ void GameObject::Render() const
 	}
 }
 
-void GameObject::OnCollision(const BoxColliderComponent *otherCollider )
+void GameObject::OnCollisionEnter(const Collision* collision)
 {
 	for (BaseComponent* pComponent : m_pComponents)
 	{
-		pComponent->OnCollision(otherCollider);
+		pComponent->OnCollisionEnter(collision);
+	}
+}
+
+void GameObject::OnCollisionExit(const Collision* collision)
+{
+	for (BaseComponent* pComponent : m_pComponents)
+	{
+		pComponent->OnCollisionExit(collision);
+	}
+}
+
+void GameObject::OnTriggerEnter( const Collision* collision)
+{
+	for (BaseComponent* pComponent : m_pComponents)
+	{
+		pComponent->OnTriggerEnter(collision);
+	}
+}
+
+void GameObject::OnTriggerExit(const Collision* collision)
+{
+	for (BaseComponent* pComponent : m_pComponents)
+	{
+		pComponent->OnTriggerExit(collision);
+	}
+}
+
+void GameObject::PostSolve( b2Contact *contact, const b2ContactImpulse *impulse )
+{
+	for( BaseComponent * pComponent : m_pComponents )
+	{
+		pComponent->PostSolve(contact, impulse);
 	}
 }
 
@@ -104,6 +157,7 @@ GameObject* GameObject::Clone() const
 {
 	GameObject* clone{ new GameObject{} };
 
+	clone->m_Tag = m_Tag;
 	clone->m_Layer = m_Layer;
 	clone->m_IgnoredLayers = m_IgnoredLayers;
 	

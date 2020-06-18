@@ -19,7 +19,7 @@ BaseComponent * BaseComponent::CreateFromJson( const std::string &componentName,
 
 	if (it == m_ComponentPrototypes.end())
 		throw std::exception(std::string{ "Component " + componentName + " wasn't registered!\n" }.c_str());
-	
+
 	BaseComponent* component{ it->second->Clone() };
 	component->LoadFromJson(json);
 

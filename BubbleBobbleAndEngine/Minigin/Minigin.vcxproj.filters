@@ -68,6 +68,9 @@
     <ClInclude Include="CoopMode.h">
       <Filter>GameModes</Filter>
     </ClInclude>
+    <ClInclude Include="StartMenu.h">
+      <Filter>GameModes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -114,6 +117,9 @@
       <Filter>GameModes</Filter>
     </ClCompile>
     <ClCompile Include="CoopMode.cpp">
+      <Filter>GameModes</Filter>
+    </ClCompile>
+    <ClCompile Include="StartMenu.cpp">
       <Filter>GameModes</Filter>
     </ClCompile>
   </ItemGroup>

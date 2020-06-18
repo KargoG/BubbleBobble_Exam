@@ -26,7 +26,7 @@ void LevelLoader::Init()
 	int levelNumber{0};
 	for( Scene *& level : m_Levels )
 	{
-		glm::vec3 pos{0, GameData::GetInstance().GetSpriteHeight() * (GameData::GetInstance().GetLevelHeight() - 1) * GameData::GetInstance().GetSpriteScale(), 0};
+		glm::vec3 pos{0, (GameData::GetInstance().GetLevelHeight() - 1), 0};
 		
 		level = SceneManager::GetInstance().CreateScene("Level" + std::to_string(levelNumber));
 		for (int levelLine = 0; levelLine < GameData::GetInstance().GetLevelHeight(); ++levelLine)
@@ -54,17 +54,18 @@ void LevelLoader::Init()
 					}
 					
 					mask >>= 1; // bit shift bitmask
-					pos.x += GameData::GetInstance().GetSpriteWidth() * GameData::GetInstance().GetSpriteScale();
+					pos.x += GameData::GetInstance().GetSpriteScale();
 				}
 			}
 
-			pos.y -= GameData::GetInstance().GetSpriteHeight() * GameData::GetInstance().GetSpriteScale();
+			pos.y -= GameData::GetInstance().GetSpriteScale();
 		}
 
 		GameObject* levelCollider{ new GameObject{} };
-		levelCollider->AddComponent(new BoxColliderComponent{ float(GameData::GetInstance().GetWindowWidth()), 20 });
+		levelCollider->AddComponent(new RigidbodyComponent{});
+		levelCollider->AddComponent(new BoxColliderComponent{ float(GameData::GetInstance().GetLevelWidth()), 1 });
 		
-		levelCollider->GetComponent<TransformComponent>()->SetPosition(0, float(GameData::GetInstance().GetWindowHeight()), 0);
+		levelCollider->GetComponent<TransformComponent>()->SetPosition(float(GameData::GetInstance().GetLevelWidth()) / 2, float(GameData::GetInstance().GetLevelHeight()) + 0.5f, 0);
 		level->Add(levelCollider);
 		
 		levelNumber++;

@@ -11,18 +11,6 @@ TextureRendererComponent::~TextureRendererComponent()
 		delete m_pTexture;
 }
 
-void TextureRendererComponent::Start()
-{
-}
-
-void TextureRendererComponent::Update()
-{
-}
-
-void TextureRendererComponent::PhysicsUpdate()
-{
-}
-
 void TextureRendererComponent::Render() const
 {
 	glm::vec3 pos{ 0, 0, 0 };

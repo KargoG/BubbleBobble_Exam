@@ -1,6 +1,7 @@
 #pragma once
 #include <BaseComponent.h>
 
+struct Collision;
 class RigidbodyComponent;
 
 class BulletBehaviourComponent :
@@ -8,10 +9,8 @@ class BulletBehaviourComponent :
 {
 public:
 	virtual void Start() override;
-	virtual void Update() override {}
 	virtual void PhysicsUpdate() override;
-	virtual void OnCollision(const BoxColliderComponent* other) override;
-	virtual void Render() const override {};
+	virtual void OnTriggerEnter(const Collision* collision) override;
 	virtual BaseComponent* Clone() const override;
 	virtual void LoadFromJson(const nlohmann::json& json) override;
 

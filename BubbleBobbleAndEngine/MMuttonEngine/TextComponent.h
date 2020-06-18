@@ -11,7 +11,6 @@ public:
 	TextComponent(const std::string& fontName, int fontSize, const std::string& text = "Example Text");
 	~TextComponent();
 	
-	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PhysicsUpdate() override;
 	virtual void Render() const override;

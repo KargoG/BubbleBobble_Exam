@@ -1,11 +1,14 @@
 #pragma once
 #include <json.hpp>
 
+struct b2ContactImpulse;
+class b2Contact;
+struct Collision;
 class BoxColliderComponent;
 class Scene;
 class BaseComponent;
 
-enum class PhysicsLayer
+enum class PhysicsLayer // TODO remove
 {
 	Layer00 = 1 << 0,
 	Layer01 = 1 << 1,
@@ -45,12 +48,17 @@ enum class PhysicsLayer
 class GameObject
 {
 public:
-	virtual void Start();
-	virtual void Update();
-	virtual void PhysicsUpdate();
-	virtual void Render() const;
-	virtual void OnCollision(const BoxColliderComponent* otherCollider );
-	virtual void Swap();
+	void Awake();
+	void Start();
+	void Update();
+	void PhysicsUpdate();
+	void Render() const;
+	void OnCollisionEnter(const Collision* collision);
+	void OnCollisionExit(const Collision* collision);
+	void OnTriggerEnter(const Collision* collision);
+	void OnTriggerExit(const Collision* collision);
+	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+	void Swap();
 	virtual GameObject* Clone() const;
 
 	GameObject();
@@ -74,8 +82,13 @@ public:
 	void AddIgnoredPhysicsLayers(PhysicsLayer newLayers) { m_IgnoredLayers = PhysicsLayer(int(m_IgnoredLayers) | int(newLayers)); }
 	void SetIgnoredPhysicsLayers(PhysicsLayer layers) { m_IgnoredLayers = layers; }
 	PhysicsLayer GetIgnoredPhysicsLayers() const { return m_IgnoredLayers; }
+
+	void SetTag(const std::string& newTag) { m_Tag = newTag; };
+	const std::string& GetTag() const { return m_Tag; };
 	
 private:
+	std::string m_Tag{};
+	
 	std::vector<BaseComponent*> m_pComponents{};
 	Scene* m_pScene;
 	PhysicsLayer m_Layer{ PhysicsLayer::Layer00 };

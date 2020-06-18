@@ -5,6 +5,7 @@ class Scene;
 class SceneManager final : public Singleton<SceneManager>
 {
 public:
+	void Awake();
 	void Start();
 	void Update();
 	void PhysicsUpdate();

@@ -27,9 +27,13 @@ public:
 
 	glm::vec2 GetPosition() const { return m_Pos; };
 	glm::vec2 GetDimension() const { return m_Dimensions; };
+	float GetPixelPerUnit() const { return m_PixelPerUnit; };
+	
 private:
 	SDL_Texture* m_Texture;
 
 	glm::vec2 m_Pos{-1.f, -1.f};
 	glm::vec2 m_Dimensions{-1.f, -1.f};
+
+	float m_PixelPerUnit{ 16 };
 };

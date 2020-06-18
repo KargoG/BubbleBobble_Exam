@@ -8,6 +8,15 @@
 #include "TransformComponent.h"
 #include "BulletBehaviourComponent.h"
 
+PlayerControllerComponent::PlayerControllerComponent() : m_pCurrentState{ new PlayerWalkingState{} }
+{
+}
+
+PlayerControllerComponent::~PlayerControllerComponent()
+{
+	delete m_pCurrentState;
+}
+
 void PlayerControllerComponent::Start()
 {
 	ControllerComponent::Start();
@@ -25,21 +34,38 @@ void PlayerControllerComponent::Start()
 void PlayerControllerComponent::Update()
 {
 	ControllerComponent::Update();
-	
-	Command* input = m_Input->ProcessInput();
-	if (input)
-		input->Execute(this);
 
-	m_XInput = m_Input->GetAxis(ControllerAxis::LeftThumbstickX);
-	if(m_LookingRight)
-		m_LookingRight = m_XInput >= 0;
-	else
-		m_LookingRight = m_XInput > 0;
+	PlayerState* newState = m_pCurrentState->Update(this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
 }
 
 void PlayerControllerComponent::PhysicsUpdate()
 {
-	m_pRB->Move(m_XInput * m_WalkSpeed * Time::GetInstance().GetPhysicsDeltaTime(), 0);
+
+	PlayerState* newState = m_pCurrentState->PhysicsUpdate(this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
+}
+
+void PlayerControllerComponent::OnTriggerEnter( const Collision * )
+{
+	//if(coll->otherCollider->GetGameObject()->GetTag() == "Wall")
+		m_TouchesBeneath++;
+}
+
+void PlayerControllerComponent::OnTriggerExit( const Collision * )
+{
+	//if (coll->otherCollider->GetGameObject()->GetTag() == "Wall")
+		m_TouchesBeneath--;
 }
 
 void PlayerControllerComponent::TakeDamage()
@@ -76,7 +102,13 @@ void PlayerControllerComponent::LoadFromJson( const nlohmann::json &json )
 
 void PlayerControllerComponent::Jump()
 {
-	m_pRB->AddVelocity(0, 10);
+	PlayerState* newState = m_pCurrentState->Jump(this);
+
+	if (newState)
+	{
+		delete m_pCurrentState;
+		m_pCurrentState = newState;
+	}
 }
 
 void PlayerControllerComponent::Shoot()
@@ -95,8 +127,101 @@ void PlayerControllerComponent::Shoot()
 	m_pGameObject->GetScene()->Add(attack);
 
 	glm::vec3 pos{ m_pGameObject->GetComponent<TransformComponent>()->GetPosition() };
-	pos.y += 2;
+	pos.y += 0.2f;
+	pos.x += m_LookingRight ? 2 : -2;
 	
 	attack->GetComponent<TransformComponent>()->SetPosition(pos);
 	attack->GetComponent<BulletBehaviourComponent>()->SetMovingRight(m_LookingRight);
+}
+
+
+PlayerState* PlayerWalkingState::Update(PlayerControllerComponent* controller)
+{
+	Command* input = controller->GetInput()->ProcessInput();
+	if (input)
+		input->Execute(controller);
+
+	m_XInput = controller->GetInput()->GetAxis(ControllerAxis::LeftThumbstickX);
+	if (controller->IsLookingRight())
+		controller->SetLookingRight(m_XInput >= 0);
+	else
+		controller->SetLookingRight(m_XInput > 0);
+
+	return nullptr;
+}
+
+PlayerState * PlayerWalkingState::PhysicsUpdate( PlayerControllerComponent *controller )
+{
+	if (abs(m_XInput) > 0)
+		controller->GetRigidbody()->SetVelocity(m_XInput * controller->GetWalkSpeed(), controller->GetRigidbody()->GetVelocity().y);
+	else
+		controller->GetRigidbody()->SetVelocity(0, controller->GetRigidbody()->GetVelocity().y);
+
+	return nullptr;
+}
+
+PlayerState * PlayerWalkingState::Jump( PlayerControllerComponent *controller )
+{
+	controller->GetRigidbody()->SetVelocity(controller->GetRigidbody()->GetVelocity().x, 10);
+
+	return new PlayerJumpingState{};
+}
+
+PlayerState * PlayerFallingState::Update( PlayerControllerComponent *controller )
+{
+	Command* input = controller->GetInput()->ProcessInput();
+	if (input)
+		input->Execute(controller);
+
+	m_XInput = controller->GetInput()->GetAxis(ControllerAxis::LeftThumbstickX);
+	if (controller->IsLookingRight())
+		controller->SetLookingRight(m_XInput >= 0);
+	else
+		controller->SetLookingRight(m_XInput > 0);
+
+	return controller->GetTouchesBeneath() > 0 ? new PlayerWalkingState() : nullptr;
+}
+
+PlayerState * PlayerFallingState::PhysicsUpdate( PlayerControllerComponent *controller )
+{
+	if (abs(m_XInput) > 0)
+		controller->GetRigidbody()->SetVelocity(m_XInput * controller->GetWalkSpeed(), min(controller->GetRigidbody()->GetVelocity().y, 0.f));
+	else
+		controller->GetRigidbody()->SetVelocity(0, min(controller->GetRigidbody()->GetVelocity().y, 0.f));
+
+	return nullptr;
+}
+
+PlayerState * PlayerJumpingState::Update( PlayerControllerComponent *controller )
+{
+	Command* input = controller->GetInput()->ProcessInput();
+	if (input)
+		input->Execute(controller);
+
+	m_XInput = controller->GetInput()->GetAxis(ControllerAxis::LeftThumbstickX);
+	if (controller->IsLookingRight())
+		controller->SetLookingRight(m_XInput >= 0);
+	else
+		controller->SetLookingRight(m_XInput > 0);
+
+	m_AccumulatedTime += Time::GetInstance().GetDeltaTime();
+	
+	return m_AccumulatedTime >= m_TimeInBubble ? new PlayerFallingState{} : nullptr;
+}
+
+PlayerState * PlayerJumpingState::PhysicsUpdate( PlayerControllerComponent *controller )
+{
+	if (abs(m_XInput) > 0)
+		controller->GetRigidbody()->SetVelocity(m_XInput * controller->GetWalkSpeed(), controller->GetRigidbody()->GetVelocity().y);
+	else
+		controller->GetRigidbody()->SetVelocity(0, controller->GetRigidbody()->GetVelocity().y);
+
+	return nullptr;
+}
+
+PlayerState * PlayerJumpingState::Jump( PlayerControllerComponent *controller )
+{
+	controller->GetRigidbody()->SetVelocity(controller->GetRigidbody()->GetVelocity().x, 10);
+
+	return nullptr;
 }
