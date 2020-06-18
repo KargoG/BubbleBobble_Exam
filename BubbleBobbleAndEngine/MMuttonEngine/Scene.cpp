@@ -231,7 +231,9 @@ void Scene::Render()
 		object->Render();
 	}
 
+#if _DEBUG
 	m_PhysicsWorld.DebugDraw();
+#endif
 }
 
 void Scene::Swap()

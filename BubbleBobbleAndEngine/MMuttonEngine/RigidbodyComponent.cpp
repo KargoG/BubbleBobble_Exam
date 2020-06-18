@@ -5,9 +5,6 @@
 #include "TransformComponent.h"
 #include "Time.h"
 #include "GameData.h"
-#if _DEBUG
-#include "Renderer.h"
-#endif
 
 RigidbodyComponent::RigidbodyComponent(b2BodyType bodyType) : m_BodyType{ bodyType }
 {

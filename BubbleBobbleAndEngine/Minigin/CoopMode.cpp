@@ -53,7 +53,7 @@ void CoopMode::Awake()
 
 	GameObject* player2{ ResourceManager::GetInstance().SpawnPrototype("Bob") };
 
-	player2->GetComponent<TransformComponent>()->SetPosition( 55, 3.8f, 0);
+	player2->GetComponent<TransformComponent>()->SetPosition( 23, 3.8f, 0);
 	player2->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
 	player2->GetComponent<PlayerControllerComponent>()->AddObserver(this);

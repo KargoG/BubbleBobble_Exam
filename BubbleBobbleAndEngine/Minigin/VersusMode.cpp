@@ -19,7 +19,7 @@ void VersusMode::Awake()
 	player->GetComponent<TransformComponent>()->SetPosition(5, 3.8f, 0);
 	player->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
-	enemy->GetComponent<TransformComponent>()->SetPosition(55, 3.8f, 0);
+	enemy->GetComponent<TransformComponent>()->SetPosition(23, 3.8f, 0);
 	enemy->GetComponent<TransformComponent>()->SetScale(float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()), float(GameData::GetInstance().GetSpriteScale()));
 
 	enemy->GetComponent<PlayerControllerComponent>()->SetPlayerNumber(1);
