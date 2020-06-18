@@ -6,6 +6,7 @@
 #include "TextureRendererComponent.h"
 #include "TransformComponent.h"
 #include "InputComponent.h"
+#include "CircleColliderComponent.h"
 
 std::unordered_map<std::string, BaseComponent*> BaseComponent::m_ComponentPrototypes{};
 
@@ -29,6 +30,7 @@ BaseComponent * BaseComponent::CreateFromJson( const std::string &componentName,
 void BaseComponent::RegisterEngineComponents()
 {
 	RegisterComponent("BoxColliderComponent", new BoxColliderComponent{});
+	RegisterComponent("CircleColliderComponent", new CircleColliderComponent{});
 	RegisterComponent("RigidbodyComponent", new RigidbodyComponent{});
 	RegisterComponent("TextComponent", new TextComponent{"", 0, "test"});
 	RegisterComponent("TextureRendererComponent", new TextureRendererComponent{});

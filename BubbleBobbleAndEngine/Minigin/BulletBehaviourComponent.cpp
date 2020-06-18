@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "PlayerControllerComponent.h"
 #include "Scene.h"
+#include "ColliderComponent.h"
 
 void BulletBehaviourComponent::Start()
 {

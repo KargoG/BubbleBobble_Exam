@@ -4,7 +4,6 @@
 #include "BaseComponent.h"
 
 struct Collision;
-class BoxColliderComponent;
 class GameObject;
 struct b2ContactImpulse;
 class b2Contact;

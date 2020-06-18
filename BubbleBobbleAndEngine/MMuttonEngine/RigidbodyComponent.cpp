@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "RigidbodyComponent.h"
 #include "GameObject.h"
-#include "BoxColliderComponent.h"
 #include "Scene.h"
 #include "TransformComponent.h"
 #include "Time.h"

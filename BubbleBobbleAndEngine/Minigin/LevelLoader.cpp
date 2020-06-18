@@ -15,6 +15,7 @@
 #include "VersusMode.h"
 #include "SingleMode.h"
 #include "CoopMode.h"
+#include "BoxColliderComponent.h"
 
 void LevelLoader::Init()
 {

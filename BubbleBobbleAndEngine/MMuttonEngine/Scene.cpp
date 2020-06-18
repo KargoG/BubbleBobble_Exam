@@ -6,6 +6,7 @@
 #include <box2d/b2_contact.h>
 #include <box2d/b2_draw.h>
 #include "Renderer.h"
+#include "ColliderComponent.h"
 
 unsigned int Scene::m_IdCounter = 0;
 
@@ -18,8 +19,12 @@ void Scene::SetGameMode( GameMode *gameMode )
 		delete m_pGameMode;
 	
 	m_pGameMode = gameMode;
+	
 	if (m_IsInitialized)
+	{
+		m_pGameMode->Awake();
 		m_pGameMode->Start();
+	}
 }
 
 Scene::Scene(const std::string& name) : m_Name(name), m_PhysicsWorld{ b2Vec2{0.0f, -9.81f} } {}
@@ -30,29 +35,29 @@ void Scene::BeginContact( b2Contact *contact )
 	bool aIsTrigger{ contact->GetFixtureA()->IsSensor() };
 	bool bIsTrigger{ contact->GetFixtureB()->IsSensor() };
 
-	Collision collsionA{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
-	Collision collsionB{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	Collision collsionA{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData()), reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	Collision collsionB{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData()), reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
 	
 	if(collsionA.ownCollider && aIsTrigger)
 	{
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionA);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionA);
 		if(collsionB.ownCollider && bIsTrigger)
 		{
-			reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionB);
+			reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionB);
 		}
 		return;
 	}
 
 	if (collsionB.ownCollider && bIsTrigger)
 	{
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionB);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerEnter(&collsionB);
 		return;
 	}
 
 	if (collsionA.ownCollider)
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnCollisionEnter(&collsionA);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnCollisionEnter(&collsionA);
 	if (collsionB.ownCollider)
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnCollisionEnter(&collsionB);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnCollisionEnter(&collsionB);
 }
 
 void Scene::EndContact( b2Contact *contact )
@@ -60,36 +65,36 @@ void Scene::EndContact( b2Contact *contact )
 	bool aIsTrigger{ contact->GetFixtureA()->IsSensor() };
 	bool bIsTrigger{ contact->GetFixtureB()->IsSensor() };
 	
-	Collision collsionA{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
-	Collision collsionB{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()), reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	Collision collsionA{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData()), reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	Collision collsionB{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData()), reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
 	
 	if (collsionA.ownCollider && aIsTrigger)
 	{
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionA);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionA);
 		if (collsionB.ownCollider && bIsTrigger)
 		{
-			reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionB);
+			reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionB);
 		}
 		return;
 	}
 
 	if (collsionB.ownCollider && bIsTrigger)
 	{
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionB);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnTriggerExit(&collsionB);
 
 		return;
 	}
 
 	if(collsionA.ownCollider)
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnCollisionExit(&collsionA);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData())->GetGameObject()->OnCollisionExit(&collsionA);
 	if (collsionB.ownCollider)
-		reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnCollisionExit(&collsionB);
+		reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData())->GetGameObject()->OnCollisionExit(&collsionB);
 }
 
 void Scene::PreSolve( b2Contact *contact, const b2Manifold *oldManifold )
 {
-	BoxColliderComponent *coll1{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
-	BoxColliderComponent *coll2{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	ColliderComponent* coll1{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	ColliderComponent* coll2{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
 	if(coll1)
 		coll1->PreSolve(contact, oldManifold);
 
@@ -99,8 +104,8 @@ void Scene::PreSolve( b2Contact *contact, const b2Manifold *oldManifold )
 
 void Scene::PostSolve( b2Contact *contact, const b2ContactImpulse *impulse )
 {
-	BoxColliderComponent* coll1{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
-	BoxColliderComponent* coll2{ reinterpret_cast<BoxColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
+	ColliderComponent* coll1{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureA()->GetUserData()) };
+	ColliderComponent* coll2{ reinterpret_cast<ColliderComponent*>(contact->GetFixtureB()->GetUserData()) };
 
 	if (coll1)
 		coll1->GetGameObject()->PostSolve(contact, impulse);
@@ -245,11 +250,11 @@ void Scene::Swap()
 	}
 	m_ObjectsToRemove.clear();
 	
-	for (BoxColliderComponent* colliderToRemove : m_ColliderToRemove)
-	{
-		m_Collider.erase(std::find(m_Collider.cbegin(), m_Collider.cend(), colliderToRemove));
-	}
-	m_ColliderToRemove.clear();
+	//for (ColliderComponent* colliderToRemove : m_ColliderToRemove)
+	//{
+	//	m_Collider.erase(std::find(m_Collider.cbegin(), m_Collider.cend(), colliderToRemove));
+	//}
+	//m_ColliderToRemove.clear();
 	
 	for (GameObject* objectToAdd : m_ObjectsToAdd)
 	{

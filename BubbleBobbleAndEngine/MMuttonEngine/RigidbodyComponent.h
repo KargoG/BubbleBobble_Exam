@@ -7,7 +7,7 @@
 #pragma warning(pop)
 
 class TransformComponent;
-class BoxColliderComponent;
+class ColliderComponent;
 
 enum class TouchFlags
 {
@@ -20,8 +20,8 @@ enum class TouchFlags
 
 struct Collision
 {
-	BoxColliderComponent *ownCollider;
-	BoxColliderComponent*otherCollider;
+	ColliderComponent*ownCollider;
+	ColliderComponent*otherCollider;
 };
 
 class RigidbodyComponent :

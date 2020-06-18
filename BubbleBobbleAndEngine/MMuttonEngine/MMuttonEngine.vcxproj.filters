@@ -23,6 +23,9 @@
     <Filter Include="Helper">
       <UniqueIdentifier>{94420475-cbe2-4d80-be64-a6d996309c3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\Collider">
+      <UniqueIdentifier>{f466c30d-f323-4310-9a2d-3487d43a7c8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -66,9 +69,6 @@
     </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="BoxColliderComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="RigidbodyComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -92,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxColliderComponent.h">
+      <Filter>Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleColliderComponent.h">
+      <Filter>Components\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +141,6 @@
       <Filter>ResourcesTypes</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="BoxColliderComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="RigidbodyComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -152,6 +158,15 @@
     </ClCompile>
     <ClCompile Include="Subject.cpp">
       <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxColliderComponent.cpp">
+      <Filter>Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleColliderComponent.cpp">
+      <Filter>Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Components\Collider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

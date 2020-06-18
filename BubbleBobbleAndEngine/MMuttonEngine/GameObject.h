@@ -4,7 +4,6 @@
 struct b2ContactImpulse;
 class b2Contact;
 struct Collision;
-class BoxColliderComponent;
 class Scene;
 class BaseComponent;
 

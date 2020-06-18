@@ -3,6 +3,7 @@
 #include "Time.h"
 #include "Subject.h"
 
+class ColliderComponent;
 class AIState;
 
 class AIControllerComponent :
@@ -57,7 +58,7 @@ public:
 	virtual AIState* PhysicsUpdate(AIControllerComponent*) { return nullptr; };
 	virtual AIState* Jump(AIControllerComponent*) { return nullptr; };
 	virtual AIState* TakeDamage(AIControllerComponent*) { return nullptr; };
-	virtual AIState* OnCollision(const BoxColliderComponent*, AIControllerComponent*) { return nullptr; };
+	virtual AIState* OnCollision(const ColliderComponent*, AIControllerComponent*) { return nullptr; };
 	virtual AIState * Clone() = 0;
 
 protected:
@@ -71,7 +72,7 @@ public:
 	AIState* PhysicsUpdate(AIControllerComponent* controller) override;
 	AIState* Jump(AIControllerComponent* controller) override;
 	AIState* TakeDamage(AIControllerComponent* controller) override;
-	AIState* OnCollision(const BoxColliderComponent* other, AIControllerComponent* controller) override;
+	AIState* OnCollision(const ColliderComponent* other, AIControllerComponent* controller) override;
 	AIState* Clone() override { return new WalkingState{}; }
 };
 
@@ -80,7 +81,7 @@ class FallingState : public AIState
 public:
 	AIState* PhysicsUpdate(AIControllerComponent*) override;
 	AIState* TakeDamage(AIControllerComponent* controller) override;
-	AIState* OnCollision(const BoxColliderComponent* other, AIControllerComponent* controller) override;
+	AIState* OnCollision(const ColliderComponent* other, AIControllerComponent* controller) override;
 	AIState* Clone() override { return new FallingState{}; }
 };
 
@@ -89,7 +90,7 @@ class JumpingUpState : public AIState
 public:
 	AIState* PhysicsUpdate(AIControllerComponent* controller) override;
 	AIState* TakeDamage(AIControllerComponent* controller) override;
-	AIState* OnCollision(const BoxColliderComponent* other, AIControllerComponent* controller) override;
+	AIState* OnCollision(const ColliderComponent* other, AIControllerComponent* controller) override;
 	AIState* Clone() override { return new FallingState{}; }
 };
 
@@ -98,7 +99,7 @@ class JumpingForwardState : public AIState
 public:
 	AIState* PhysicsUpdate(AIControllerComponent* controller) override;
 	AIState* TakeDamage(AIControllerComponent* controller) override;
-	AIState* OnCollision(const BoxColliderComponent* other, AIControllerComponent* controller) override;
+	AIState* OnCollision(const ColliderComponent* other, AIControllerComponent* controller) override;
 	AIState* Clone() override { return new JumpingForwardState{}; }
 };
 
@@ -106,7 +107,7 @@ class BubbleState : public AIState
 {
 public:
 	AIState* Update(AIControllerComponent*) override;
-	AIState* OnCollision(const BoxColliderComponent* other, AIControllerComponent* controller) override;
+	AIState* OnCollision(const ColliderComponent* other, AIControllerComponent* controller) override;
 	AIState* Clone() override { return new BubbleState{}; }
 
 private:

@@ -1,8 +1,11 @@
 #pragma once
 #include "SceneManager.h"
-#include "BoxColliderComponent.h"
 #include "GameObject.h"
 #include <box2d/b2_world.h>
+#pragma warning(push)
+#pragma warning (disable:4201)
+#include "../3rdParty/glm/glm/detail/type_vec2.hpp"
+#pragma warning(pop)
 
 class GameMode;
 class GameObject;
@@ -31,10 +34,6 @@ public:
 
 
 	std::string GetName() const { return m_Name; }
-	//void AddCollider(BoxColliderComponent* collider) { m_Collider.push_back(collider); }
-	//void RemoveCollider(BoxColliderComponent* colliderToRemove);
-
-	const std::vector <BoxColliderComponent*>& GetCollider() const { return m_Collider; };
 
 	template<typename T>
 	T* GetObjectWithComponent() const;
@@ -55,8 +54,6 @@ private:
 	std::vector <GameObject*> m_Objects{};
 	std::vector <GameObject*> m_ObjectsToAdd{};
 	std::vector <GameObject*> m_ObjectsToRemove{};
-	std::vector <BoxColliderComponent*> m_Collider{};
-	std::vector <BoxColliderComponent*> m_ColliderToRemove{};
 
 	static unsigned int m_IdCounter;
 	

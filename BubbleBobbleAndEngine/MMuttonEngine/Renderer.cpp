@@ -159,13 +159,16 @@ void Renderer::DrawSolidPolygon( const b2Vec2 *vertices, int32 vertexCount, cons
 
 void Renderer::DrawCircle( const b2Vec2 &center, float radius, const b2Color &color )
 {
-	SDL_Point* points{ new SDL_Point[21]{ {int(center.x), int(center.y)} } };
+	SDL_Point* points{ new SDL_Point[21]{ {0, 0} } };
 	
 	for( int i = 0; i < 21; i++)
 	{
 		points[i].x = int(cos(glm::two_pi<float>() / 20 * i) * radius * m_RenderScale);
 		points[i].y = int(sin(glm::two_pi<float>() / 20 * i) * radius * m_RenderScale);
 
+		points[i].x += int(center.x);
+		points[i].y += int(center.y);
+		
 		MirrorPoint(points[i].y);
 	}
 

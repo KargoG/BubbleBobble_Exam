@@ -8,6 +8,7 @@
 #include "TransformComponent.h"
 #include "ResourceManager.h"
 #include "BulletBehaviourComponent.h"
+#include "ColliderComponent.h"
 
 AIControllerComponent::AIControllerComponent()
 {
@@ -188,7 +189,7 @@ AIState * WalkingState::TakeDamage( AIControllerComponent * )
 	return new BubbleState();
 }
 
-AIState * WalkingState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+AIState * WalkingState::OnCollision( const ColliderComponent*other, AIControllerComponent * )
 {
 	if (other->GetGameObject()->GetTag() == "Player")
 	{
@@ -211,7 +212,7 @@ AIState * FallingState::TakeDamage( AIControllerComponent * )
 	return new BubbleState();
 }
 
-AIState * FallingState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+AIState * FallingState::OnCollision( const ColliderComponent*other, AIControllerComponent * )
 {
 	if (other->GetGameObject()->GetTag() == "Player")
 	{
@@ -232,7 +233,7 @@ AIState * JumpingUpState::TakeDamage( AIControllerComponent * )
 	return new BubbleState();
 }
 
-AIState * JumpingUpState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+AIState * JumpingUpState::OnCollision( const ColliderComponent*other, AIControllerComponent * )
 {
 	if (other->GetGameObject()->GetTag() == "Player")
 	{
@@ -253,7 +254,7 @@ AIState * JumpingForwardState::TakeDamage( AIControllerComponent * )
 	return new BubbleState();
 }
 
-AIState * JumpingForwardState::OnCollision( const BoxColliderComponent *other, AIControllerComponent * )
+AIState * JumpingForwardState::OnCollision( const ColliderComponent*other, AIControllerComponent * )
 {
 	if (other->GetGameObject()->GetTag() == "Player")
 	{
@@ -277,7 +278,7 @@ AIState * BubbleState::Update( AIControllerComponent *controller )
 	return nullptr;
 }
 
-AIState * BubbleState::OnCollision( const BoxColliderComponent *other, AIControllerComponent *controller )
+AIState * BubbleState::OnCollision( const ColliderComponent*other, AIControllerComponent *controller )
 {
 	if (other && other->GetGameObject()->GetTag() == "Player")
 	{

@@ -10,22 +10,13 @@
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_contact.h>
 
-BoxColliderComponent::BoxColliderComponent(float width, float height, bool isTrigger, glm::vec2 center, const PhysicsMat& pMat) : m_Dimensions{ width, height }, m_Center{ center }, m_IsTrigger{ isTrigger }, m_Mat{ pMat }
+BoxColliderComponent::BoxColliderComponent(float width, float height, bool isTrigger, glm::vec2 center, const PhysicsMat& pMat) : ColliderComponent{isTrigger, center, pMat}, m_Dimensions { width, height }
 {
-}
-
-BoxColliderComponent::~BoxColliderComponent()
-{
-	if(m_pBox)
-		m_pBox->SetUserData(nullptr);
 }
 
 void BoxColliderComponent::Start()
 {
-	m_pRB = m_pGameObject->GetComponent<RigidbodyComponent>();
-
-	if (!m_pRB)
-		throw std::exception("A collider needs a rigidbody to work!");
+	ColliderComponent::Start();
 	
 	b2FixtureDef def;
 
@@ -44,7 +35,7 @@ void BoxColliderComponent::Start()
 	
 	def.userData = this;
 	
-	m_pBox = m_pRB->AddCollider(def);
+	m_pShape = m_pRB->AddCollider(def);
 }
 
 void BoxColliderComponent::PreSolve( b2Contact *contact, const b2Manifold * )
@@ -71,10 +62,8 @@ BaseComponent * BoxColliderComponent::Clone() const
 
 void BoxColliderComponent::LoadFromJson( const nlohmann::json &json )
 {
-	m_Center.x = json.at("X").get<float>();
-	m_Center.y = json.at("Y").get<float>();
+	ColliderComponent::LoadFromJson(json);
 	m_Dimensions.x = json.at("Width").get<float>();
 	m_Dimensions.y = json.at("Height").get<float>();
-	m_IsTrigger = json.at("IsTrigger").get<bool>();
 	m_UseOneWay = json.at("UseOneWay").get<bool>();
 }

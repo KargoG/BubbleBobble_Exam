@@ -20,6 +20,7 @@
 #include "AIControllerComponent.h"
 #include "BubbleBobbleAnimationComponent.h"
 #include "TextComponent.h"
+#include "StartMenu.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -47,28 +48,11 @@ void Minigin::Initialize()
 	Renderer::GetInstance().Init(m_Window);
 }
 
-class StartSingle : public Command
-{
-public:
-	void Execute( ControllerComponent * ) override{ LevelLoader::GetInstance().LoadLevel(0, BubbleBobbleGameMode::Single); }
-};
-class StartCoop : public Command
-{
-public:
-	void Execute( ControllerComponent * ) override{ LevelLoader::GetInstance().LoadLevel(0, BubbleBobbleGameMode::Coop); }
-};
-class StartVersus : public Command
-{
-public:
-	void Execute( ControllerComponent * ) override{ LevelLoader::GetInstance().LoadLevel(0, BubbleBobbleGameMode::Versus); }
-};
-
 /**
  * Code constructing the scene world starts here
  */
 void Minigin::LoadGame() const
 {
-
 	// Register Components
 	BaseComponent::RegisterEngineComponents();
 	BaseComponent::RegisterComponent("FPS", new FPS{});
@@ -79,37 +63,6 @@ void Minigin::LoadGame() const
 
 	// Load Levels
 	LevelLoader::GetInstance().Init();
-	
-
-
-	Scene *startScene = SceneManager::GetInstance().CreateScene("MainMenuScene");
-	GameObject* input{ new GameObject{} };
-
-	InputComponent* ic{ new InputComponent() };
-	ic->RegisterCommand(ControllerButton::ButtonY, new StartSingle());
-	ic->RegisterCommand(ControllerButton::ButtonA, new StartCoop());
-	ic->RegisterCommand(ControllerButton::ButtonB, new StartVersus());
-
-	input->AddComponent(ic);
-	
-	GameObject* singleText{ new GameObject{} };
-	GameObject* coopText{ new GameObject{} };
-	GameObject* versusText{ new GameObject{} };
-	singleText->AddComponent(new TextComponent{ "Lingua.otf", 30, "Press Y to play Solo!" });
-	coopText->AddComponent(new TextComponent{ "Lingua.otf", 30, "Press A to play Coop!" });
-	versusText->AddComponent(new TextComponent{ "Lingua.otf", 30, "Press B to play Versus!" });
-
-	singleText->GetComponent<TransformComponent>()->SetPosition(0, 0, 0);
-	coopText->GetComponent<TransformComponent>()->SetPosition(0, 50, 0);
-	versusText->GetComponent<TransformComponent>()->SetPosition(0, 100, 0);
-
-	startScene->Add(input);
-	startScene->Add(singleText);
-	startScene->Add(coopText);
-	startScene->Add(versusText);
-
-	//SceneManager::GetInstance().SetActiveScene("MainMenuScene");
-
 	
 	GameObject *gameOverText{ new GameObject{} };
 
@@ -132,7 +85,9 @@ void Minigin::LoadGame() const
 
 	SceneManager::GetInstance().CreateScene("PlayerTwoWinScene")->Add(player2WinOverText);
 
-	LevelLoader::GetInstance().LoadLevel(5, BubbleBobbleGameMode::Single);
+
+	SceneManager::GetInstance().CreateScene("MainMenuScene")->SetGameMode(new StartMenu{});
+	SceneManager::GetInstance().SetActiveScene("MainMenuScene");
 }
 
 void Minigin::Cleanup()
