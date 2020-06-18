@@ -1,11 +1,19 @@
 {
+  "Tag":"Wall",
   "IgnoredLayers":{ },
   "PhysicsLayer": 10,
   "BoxColliderComponent":
   {
-    "Width": 16,
-    "Height": 16,
+    "X": 0.5,
+    "Y": 0.5,
+    "Width": 1,
+    "Height": 1,
+    "IsTrigger": false,
     "UseOneWay": true
+  },
+  "RigidbodyComponent": {
+    "BodyType": "static",
+    "ApplyGravity": false
   },
   "TextureRendererComponent":
   {

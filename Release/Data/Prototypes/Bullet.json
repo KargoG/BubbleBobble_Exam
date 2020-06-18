@@ -1,13 +1,18 @@
 {
+  "Tag":"Bullet",
   "IgnoredLayers":{ "1":3, "2":4 },
   "PhysicsLayer": 4,
   "BoxColliderComponent":
   {
-    "Width": 16,
-    "Height": 16,
+    "X": 0.5,
+    "Y": 0.5,
+    "Width": 1,
+    "Height": 1,
+    "IsTrigger": true,
     "UseOneWay": false
   },
   "RigidbodyComponent": {
+    "BodyType": "dynamic",
     "ApplyGravity": false
   },
   "TextureRendererComponent":
@@ -19,7 +24,7 @@
     "Height": 16
   },
   "BulletBehaviourComponent": {
-    "SpeedVertical": 50.0,
-    "SpeedHorizontal": 50.0
+    "SpeedVertical": 5.0,
+    "SpeedHorizontal": 5.0
   }
 }
